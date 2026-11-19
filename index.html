@@ -4,87 +4,428 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1456a0">
-<title>WINpharma POINT | 試作品</title>
+<title>WINpharma POINT</title>
+
 <style>
-:root{--blue:#1456a0;--blue2:#2478c9;--orange:#f28a24;--bg:#f3f6fa;--ink:#18324d;--muted:#718096;--white:#fff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--ink)}
-.app{max-width:480px;margin:auto;min-height:100vh;background:var(--bg);padding-bottom:84px}
-header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;padding:22px 20px 26px;border-radius:0 0 25px 25px}
-.brand{font-size:12px;letter-spacing:2px;font-weight:800;opacity:.9}.title{font-size:23px;font-weight:800;margin-top:7px}.subtitle{font-size:12px;opacity:.85;margin-top:5px}
-main{padding:16px}.card{background:white;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 4px 18px #173b5b0d}
-.points{background:linear-gradient(120deg,#fff,#fff8ef);border:1px solid #ffe1bd}
-.label{font-size:12px;color:var(--muted);font-weight:700}.pointnum{font-size:38px;font-weight:900;color:var(--blue);margin:5px 0}.pointnum small{font-size:14px;color:var(--muted)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.pill{background:#fff0df;color:#bd6411;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}
-h2{font-size:16px;margin:0 0 12px}.muted{color:var(--muted);font-size:12px;line-height:1.6}
-.btn{border:0;border-radius:12px;padding:13px 15px;font-size:14px;font-weight:800;cursor:pointer;background:var(--blue);color:white;width:100%}.btn.orange{background:var(--orange)}.btn.light{background:#eaf2fb;color:var(--blue)}.btn:disabled{opacity:.4;cursor:not-allowed}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{border:1px solid #e7edf4;border-radius:14px;padding:13px;background:#fff}.tile .emoji{font-size:25px}.tile b{display:block;font-size:13px;margin:6px 0}.tile span{font-size:11px;color:var(--muted)}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:white;border-top:1px solid #e7edf4;padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:5}
-nav button{border:0;background:none;color:#8291a2;font-size:10px;padding:5px 0;cursor:pointer}nav button strong{display:block;font-size:19px;margin-bottom:3px}nav button.active{color:var(--blue);font-weight:800}
-.page{display:none}.page.active{display:block}
-.qrbox{width:172px;height:172px;margin:15px auto;background:repeating-conic-gradient(#16324d 0 25%,white 0 50%) 0/18px 18px;border:12px solid white;outline:1px solid #d8e0e8;border-radius:5px;position:relative}
-.qrbox:after{content:"DEMO";position:absolute;inset:0;display:grid;place-items:center;background:#ffffffdc;font-weight:900;letter-spacing:3px;color:var(--blue)}
-.member{text-align:center;font-weight:800;letter-spacing:2px;font-size:13px}
-input{width:100%;padding:13px;border:1px solid #d8e1eb;border-radius:10px;font-size:16px;margin:7px 0 12px}
-.reward{display:flex;align-items:center;gap:12px}.reward .emoji{font-size:30px}.reward .info{flex:1}.reward .info b{font-size:13px;display:block}.reward .info span{font-size:11px;color:var(--muted)}
-.history{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #edf1f5;font-size:13px}.plus{color:#16845b;font-weight:800}.minus{color:#d46b25;font-weight:800}
-.notice{background:#fff7e9;border-left:4px solid var(--orange);padding:11px 12px;border-radius:8px;font-size:11px;line-height:1.6;color:#79501e}
-footer{text-align:center;font-size:10px;color:#9aa6b2;padding:10px}
+:root {
+  --blue:#1456a0;
+  --blue2:#2478c9;
+  --orange:#f28a24;
+  --bg:#f3f6fa;
+  --ink:#18324d;
+  --muted:#718096;
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",sans-serif;
+  color:var(--ink);
+}
+
+.app {
+  max-width:480px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:30px;
+}
+
+header {
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:white;
+  padding:25px 20px;
+  border-radius:0 0 25px 25px;
+}
+
+.brand {font-size:12px;letter-spacing:2px}
+.title {font-size:23px;font-weight:800;margin-top:7px}
+
+main {padding:16px}
+
+.card {
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:15px;
+  box-shadow:0 4px 18px #173b5b0d;
+}
+
+h2 {font-size:17px;margin:0 0 15px}
+
+input {
+  width:100%;
+  padding:14px;
+  border:1px solid #d8e1eb;
+  border-radius:10px;
+  font-size:16px;
+  margin:7px 0 15px;
+}
+
+label {font-size:12px;font-weight:bold}
+
+.btn {
+  border:0;
+  border-radius:12px;
+  padding:14px;
+  font-size:14px;
+  font-weight:bold;
+  cursor:pointer;
+  background:var(--blue);
+  color:white;
+  width:100%;
+  margin-bottom:10px;
+}
+
+.orange {background:var(--orange)}
+.light {background:#eaf2fb;color:var(--blue)}
+
+.muted {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+
+.pointnum {
+  font-size:40px;
+  font-weight:900;
+  color:var(--blue);
+  margin:10px 0;
+}
+
+.member {
+  text-align:center;
+  font-size:18px;
+  font-weight:bold;
+  letter-spacing:2px;
+  padding:15px;
+  background:#f3f6fa;
+  border-radius:10px;
+}
+
+.hidden {display:none!important}
+
+.message {
+  font-size:13px;
+  color:#d46b25;
+  margin-bottom:12px;
+  line-height:1.6;
+}
+
 </style>
 </head>
+
 <body>
+
 <div class="app">
-<header><div class="brand">WINpharma</div><div class="title">WINpharma POINT</div><div class="subtitle">お買い物でポイントを貯めて、特典と交換。</div></header>
+
+<header>
+  <div class="brand">WINpharma</div>
+  <div class="title">WINpharma POINT</div>
+  <p>お買い物でポイントを貯めて、特典と交換。</p>
+</header>
+
 <main>
-<section id="home" class="page active">
- <div class="card points"><div class="row"><span class="label">現在の保有ポイント</span><span class="pill">全店共通・デモ版</span></div><div class="pointnum" id="balance">0 <small>pt</small></div><div class="muted">OTC対象商品の購入で、100円につき1ポイント（端数処理は仮設定）</div></div>
- <div class="card"><h2>ポイントを使う</h2><div class="grid">
- <div class="tile"><div class="emoji">🎁</div><b>特典と交換</b><span>ポイントで景品に交換</span></div>
- <div class="tile"><div class="emoji">📱</div><b>会員コード</b><span>店舗で提示するコード</span></div>
- </div><button class="btn orange" style="margin-top:12px" onclick="show('rewards')">交換できる特典を見る</button></div>
- <div class="card"><h2>お知らせ</h2><p class="muted">WINpharma POINT 試作品へようこそ。特典内容・ポイント条件は今後設定できます。</p></div>
- <div class="notice">これは操作確認用の試作品です。ポイントはこの端末内にだけ保存され、店舗間共有・実際の付与や交換はまだできません。</div>
+
+<!-- 会員登録・ログイン画面 -->
+<section id="authSection">
+
+  <div class="card">
+
+    <h2>WINpharma POINTへようこそ</h2>
+
+    <p class="muted">
+      メールアドレスとパスワードで会員登録できます。
+    </p>
+
+    <div id="errorMessage" class="message"></div>
+
+    <label>メールアドレス</label>
+    <input id="email" type="email" placeholder="example@email.com">
+
+    <label>パスワード（6文字以上）</label>
+    <input id="password" type="password" placeholder="パスワード">
+
+    <button class="btn orange" id="registerBtn">
+      新規会員登録
+    </button>
+
+    <button class="btn" id="loginBtn">
+      ログイン
+    </button>
+
+  </div>
+
 </section>
-<section id="code" class="page">
- <div class="card"><h2>お客さまコード</h2><p class="muted">スタッフ画面で会員番号を入力して、ポイント付与・交換を試せます。</p><div class="qrbox"></div><div class="member">会員番号：WF-DEMO-0001</div><p class="muted" style="text-align:center">※QRコードは画面イメージです（読み取り機能は未実装）</p></div>
+
+
+<!-- ログイン後の画面 -->
+<section id="memberSection" class="hidden">
+
+  <div class="card">
+
+    <h2>こんにちは！</h2>
+
+    <p class="muted">あなたの会員番号</p>
+
+    <div class="member" id="memberNumber">
+      読み込み中
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>現在の保有ポイント</h2>
+
+    <div class="pointnum">
+      <span id="pointBalance">0</span>
+      <small style="font-size:15px">pt</small>
+    </div>
+
+    <p class="muted">
+      OTC対象商品の購入でポイントが貯まります。
+    </p>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>会員情報</h2>
+
+    <p class="muted">
+      登録メールアドレス
+    </p>
+
+    <p id="memberEmail"></p>
+
+    <button class="btn light" id="logoutBtn">
+      ログアウト
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>特典交換</h2>
+
+    <p class="muted">
+      今後、ポイントを使って景品と交換できるようにします。
+    </p>
+
+  </div>
+
 </section>
-<section id="rewards" class="page">
- <div class="card"><div class="row"><h2>特典と交換</h2><span class="pill"><span id="rewardBalance">0</span> pt</span></div>
- <div class="reward"><div class="emoji">🧴</div><div class="info"><b>日用品ミニギフト</b><span>交換ポイント：100pt（仮）</span></div><button class="btn light" style="width:auto" onclick="redeem(100,'日用品ミニギフト')">交換</button></div><hr style="border:0;border-top:1px solid #edf1f5;margin:14px 0">
- <div class="reward"><div class="emoji">🛍️</div><div class="info"><b>WINpharmaオリジナルグッズ</b><span>交換ポイント：300pt（仮）</span></div><button class="btn light" style="width:auto" onclick="redeem(300,'オリジナルグッズ')">交換</button></div><hr style="border:0;border-top:1px solid #edf1f5;margin:14px 0">
- <div class="reward"><div class="emoji">🎟️</div><div class="info"><b>特別ノベルティ</b><span>交換ポイント：500pt（仮）</span></div><button class="btn light" style="width:auto" onclick="redeem(500,'特別ノベルティ')">交換</button></div></div>
- <p class="muted">※景品・必要ポイントは仮の内容です。実際の導入前に景品規制等を確認します。</p>
-</section>
-<section id="history" class="page"><div class="card"><h2>ポイント履歴</h2><div id="historyList" class="muted">まだ履歴はありません。</div></div></section>
-<section id="staff" class="page">
- <div class="card"><h2>スタッフ用デモ画面</h2><div class="notice">本番運用ではスタッフ認証が必要です。この試作品では操作を体験できます。</div>
- <label class="label">会員番号</label><input value="WF-DEMO-0001" readonly>
- <label class="label">OTC対象購入金額（円）</label><input id="amount" type="number" min="0" step="1" placeholder="例：1280">
- <p class="muted">付与予定：<b id="calc">0 pt</b>（100円につき1pt・100円未満切り捨て）</p>
- <button class="btn" onclick="addPoints()">ポイントを付与する</button>
- <hr style="border:0;border-top:1px solid #edf1f5;margin:18px 0">
- <h2>交換処理（デモ）</h2><label class="label">交換ポイント</label><input id="redeemAmount" type="number" min="1" placeholder="例：100"><button class="btn orange" onclick="staffRedeem()">交換を確定する</button>
- </div>
-</section>
+
 </main>
-<nav>
-<button class="active" data-page="home" onclick="show('home')"><strong>⌂</strong>ホーム</button>
-<button data-page="code" onclick="show('code')"><strong>▦</strong>会員コード</button>
-<button data-page="rewards" onclick="show('rewards')"><strong>☆</strong>特典交換</button>
-<button data-page="history" onclick="show('history')"><strong>▤</strong>履歴</button>
-</nav>
-<footer>WINpharma POINT / Prototype</footer>
+
+<footer style="text-align:center;color:#9aa6b2;font-size:10px">
+WINpharma POINT / Prototype
+</footer>
+
 </div>
-<script>
-let points=Number(localStorage.getItem('wf_points')||0);
-let logs=JSON.parse(localStorage.getItem('wf_logs')||'[]');
-function save(){localStorage.setItem('wf_points',points);localStorage.setItem('wf_logs',JSON.stringify(logs));render()}
-function render(){document.getElementById('balance').innerHTML=points+' <small>pt</small>';document.getElementById('rewardBalance').textContent=points;let el=document.getElementById('historyList');el.innerHTML=logs.length?logs.slice().reverse().map(x=>`<div class="history"><span>${x.label}<br><small style="color:#9aa6b2">${x.date}</small></span><b class="${x.value>0?'plus':'minus'}">${x.value>0?'+':''}${x.value}pt</b></div>`).join(''):'まだ履歴はありません。'}
-function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));}
-document.getElementById('amount').addEventListener('input',e=>document.getElementById('calc').textContent=Math.floor(Math.max(0,Number(e.target.value)||0)/100)+' pt');
-function log(label,value){logs.push({label,value,date:new Date().toLocaleString('ja-JP')});save()}
-function addPoints(){let a=Math.floor(Number(document.getElementById('amount').value)||0);let p=Math.floor(a/100);if(a<=0||p<=0){alert('100円以上の金額を入力してください');return}points+=p;log('OTC購入ポイント付与',p);document.getElementById('amount').value='';document.getElementById('calc').textContent='0 pt';alert(p+'ポイント付与しました（デモ）');}
-function redeem(p,name){if(points<p){alert('ポイントが不足しています');return}if(!confirm(name+'を'+p+'ポイントで交換しますか？（デモ）'))return;points-=p;log(name+'と交換',-p);alert('交換処理を行いました（デモ）。実際の商品受け取りはできません。')}
-function staffRedeem(){let p=Math.floor(Number(document.getElementById('redeemAmount').value)||0);if(p<=0||p>points){alert('交換ポイントを確認してください');return}if(!confirm(p+'ポイントを減算しますか？'))return;points-=p;log('スタッフによる交換処理',-p);document.getElementById('redeemAmount').value='';alert('デモ交換を確定しました');}
-render();
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
+  authDomain: "winpharma-point.firebaseapp.com",
+  projectId: "winpharma-point",
+  storageBucket: "winpharma-point.firebasestorage.app",
+  messagingSenderId: "1045028388131",
+  appId: "1:1045028388131:web:2847eaf400a71755d62096",
+  measurementId: "G-SHM8XCJP9W"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+const authSection = document.getElementById("authSection");
+const memberSection = document.getElementById("memberSection");
+const errorMessage = document.getElementById("errorMessage");
+
+
+function showError(message) {
+  errorMessage.textContent = message;
+}
+
+
+function translateError(error) {
+
+  const messages = {
+    "auth/email-already-in-use":
+      "このメールアドレスはすでに登録されています。",
+    "auth/invalid-email":
+      "メールアドレスを確認してください。",
+    "auth/weak-password":
+      "パスワードは6文字以上にしてください。",
+    "auth/invalid-credential":
+      "メールアドレスまたはパスワードが違います。",
+    "auth/network-request-failed":
+      "通信エラーです。ネット環境を確認してください。"
+  };
+
+  return messages[error.code] || "エラーが発生しました。もう一度お試しください。";
+}
+
+
+// 会員登録
+document.getElementById("registerBtn").addEventListener("click", async () => {
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showError("メールアドレスとパスワードを入力してください。");
+    return;
+  }
+
+  if (password.length < 6) {
+    showError("パスワードは6文字以上にしてください。");
+    return;
+  }
+
+  try {
+
+    const result = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const uid = result.user.uid;
+
+    await setDoc(doc(db, "members", uid), {
+      uid: uid,
+      points: 0,
+      createdAt: serverTimestamp()
+    });
+
+  } catch (error) {
+
+    showError(translateError(error));
+
+  }
+
+});
+
+
+// ログイン
+document.getElementById("loginBtn").addEventListener("click", async () => {
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showError("メールアドレスとパスワードを入力してください。");
+    return;
+  }
+
+  try {
+
+    await signInWithEmailAndPassword(auth, email, password);
+
+  } catch (error) {
+
+    showError(translateError(error));
+
+  }
+
+});
+
+
+// ログイン状態の確認
+onAuthStateChanged(auth, async (user) => {
+
+  if (user) {
+
+    try {
+
+      const memberRef = doc(db, "members", user.uid);
+      let memberDoc = await getDoc(memberRef);
+
+      // 会員データがなければ初期登録
+      if (!memberDoc.exists()) {
+
+        await setDoc(memberRef, {
+          uid: user.uid,
+          points: 0,
+          createdAt: serverTimestamp()
+        });
+
+        memberDoc = await getDoc(memberRef);
+
+      }
+
+      const memberData = memberDoc.data();
+
+      authSection.classList.add("hidden");
+      memberSection.classList.remove("hidden");
+
+      document.getElementById("memberNumber").textContent =
+        "WF-" + user.uid.substring(0, 8).toUpperCase();
+
+      document.getElementById("pointBalance").textContent =
+        memberData.points ?? 0;
+
+      document.getElementById("memberEmail").textContent =
+        user.email;
+
+    } catch (error) {
+
+      showError("会員情報を読み込めませんでした。");
+      console.error(error);
+
+    }
+
+  } else {
+
+    authSection.classList.remove("hidden");
+    memberSection.classList.add("hidden");
+
+  }
+
+});
+
+
+// ログアウト
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+
+  await signOut(auth);
+
+});
+
 </script>
-</body></html>
+
+</body>
+</html>
