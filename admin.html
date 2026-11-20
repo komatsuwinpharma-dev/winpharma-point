@@ -37,7 +37,7 @@ header h1 { margin: 0; font-size: 22px; }
   box-shadow: 0 2px 8px #0000000a;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 13px;
   margin: 8px 0;
@@ -57,8 +57,18 @@ button {
 }
 
 .orange { background: #f39824; }
+.red { background: #d9534f; }
+.green { background: #299b68; }
 
 .error { color: #d33; }
+
+.notice {
+  background: #fff4e5;
+  border-left: 5px solid #f39824;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
 
 .cards {
   display: grid;
@@ -70,6 +80,29 @@ button {
   color: #174b83;
   font-size: 28px;
 }
+
+#dashboard { display: none; }
+
+.menu {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.menu button {
+  background: white;
+  color: #174b83;
+  border: 1px solid #dce3ec;
+}
+
+.menu button.active {
+  background: #174b83;
+  color: white;
+}
+
+.page { display: none; }
+.page.active { display: block; }
 
 table {
   width: 100%;
@@ -87,7 +120,15 @@ th { background: #f7f9fc; }
 
 .table-wrap { overflow-x: auto; }
 
-#dashboard { display: none; }
+.selected {
+  background: #eaf2fc;
+}
+
+.balance {
+  font-size: 25px;
+  color: #174b83;
+  font-weight: bold;
+}
 
 @media(max-width:600px) {
   .cards { grid-template-columns: 1fr; }
@@ -106,22 +147,21 @@ th { background: #f7f9fc; }
 
   <div id="loginArea" class="card">
     <h2>管理者ログイン</h2>
-
-    <input id="email" type="email"
-      placeholder="メールアドレス">
-
-    <input id="password" type="password"
-      placeholder="パスワード">
-
+    <input id="email" type="email" placeholder="メールアドレス">
+    <input id="password" type="password" placeholder="パスワード">
     <button id="loginBtn">ログイン</button>
-
     <p id="loginError" class="error"></p>
   </div>
 
   <div id="dashboard">
 
+    <div class="notice">
+      現在は無料プラン用のデモ画面です。
+      ポイント操作は画面上のみで、実際の会員データは変更されません。
+    </div>
+
     <div class="card">
-      <p>ログイン中：<span id="adminEmail"></span></p>
+      ログイン中：<span id="adminEmail"></span>
       <button id="logoutBtn" class="orange">ログアウト</button>
     </div>
 
@@ -132,20 +172,24 @@ th { background: #f7f9fc; }
       </div>
 
       <div class="card">
-        <p>保有ポイント合計</p>
+        <p>保有ポイント合計（デモ）</p>
         <h2 id="totalPoints">0 pt</h2>
       </div>
     </div>
 
-    <div class="section">
+    <div class="menu">
+      <button class="active" onclick="showPage('members',this)">会員管理</button>
+      <button onclick="showPage('points',this)">ポイント管理</button>
+      <button onclick="showPage('history',this)">操作履歴</button>
+    </div>
+
+    <!-- 会員管理 -->
+    <div id="members" class="section page active">
       <h2>会員一覧</h2>
 
-      <input
-        id="search"
-        placeholder="会員番号で検索"
-      >
+      <input id="search" placeholder="会員番号で検索">
 
-      <p id="status">会員情報を読み込み中...</p>
+      <p id="status">読み込み中...</p>
 
       <div class="table-wrap">
         <table>
@@ -153,17 +197,72 @@ th { background: #f7f9fc; }
             <tr>
               <th>会員番号</th>
               <th>保有ポイント</th>
-              <th>登録状況</th>
+              <th>操作</th>
             </tr>
           </thead>
-
           <tbody id="memberList"></tbody>
         </table>
       </div>
     </div>
 
-  </div>
+    <!-- ポイント管理 -->
+    <div id="points" class="section page">
+      <h2>ポイント管理</h2>
 
+      <p>選択中の会員</p>
+      <h3 id="selectedNumber">会員が選択されていません</h3>
+
+      <p>現在のポイント</p>
+      <div class="balance" id="selectedBalance">0 pt</div>
+
+      <label>操作内容</label>
+      <select id="operation">
+        <option value="add">ポイント付与</option>
+        <option value="subtract">ポイント減算</option>
+      </select>
+
+      <label>ポイント数</label>
+      <input id="pointAmount" type="number" min="1" placeholder="例：10">
+
+      <label>変更理由</label>
+      <select id="reason">
+        <option value="">理由を選択してください</option>
+        <option value="購入ポイント">購入ポイント</option>
+        <option value="キャンペーン">キャンペーン</option>
+        <option value="ポイント調整">ポイント調整</option>
+        <option value="その他">その他</option>
+      </select>
+
+      <button class="green" onclick="executeDemo()">操作内容を確認</button>
+
+      <p id="pointMessage"></p>
+    </div>
+
+    <!-- 操作履歴 -->
+    <div id="history" class="section page">
+      <h2>ポイント操作履歴（デモ）</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日時</th>
+              <th>会員番号</th>
+              <th>操作</th>
+              <th>ポイント</th>
+              <th>理由</th>
+            </tr>
+          </thead>
+          <tbody id="historyList">
+            <tr>
+              <td colspan="5">履歴はありません</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script type="module">
@@ -188,7 +287,6 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebase設定
 const firebaseConfig = {
   apiKey: "AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
   authDomain: "winpharma-point.firebaseapp.com",
@@ -204,24 +302,23 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let members = [];
+let selectedMember = null;
+let demoPoints = {};
+let histories = [];
 
-// ログイン
 document.getElementById("loginBtn").onclick = async () => {
-
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  const error = document.getElementById("loginError");
-
-  error.textContent = "";
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
+    document.getElementById("loginError").textContent = "";
   } catch (e) {
-    error.textContent = "ログインできません。入力内容を確認してください。";
+    document.getElementById("loginError").textContent =
+      "ログインできません。入力内容を確認してください。";
   }
 };
 
-// ログイン状態確認
 onAuthStateChanged(auth, async (user) => {
 
   if (!user) {
@@ -231,8 +328,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-
-    // 管理者情報を確認
     const adminRef = doc(db, "admins", user.uid);
     const adminSnap = await getDoc(adminRef);
 
@@ -250,23 +345,19 @@ onAuthStateChanged(auth, async (user) => {
     await loadMembers();
 
   } catch (e) {
-
-    document.getElementById("loginError").textContent =
-      "データを取得できません。権限設定を確認してください。";
-
     console.error(e);
+    document.getElementById("loginError").textContent =
+      "データを取得できません。";
     await signOut(auth);
   }
 });
 
-// 会員一覧取得
 async function loadMembers() {
 
   const status = document.getElementById("status");
   status.textContent = "読み込み中...";
 
   try {
-
     const snapshot = await getDocs(collection(db, "members"));
 
     members = snapshot.docs.map(item => ({
@@ -274,30 +365,29 @@ async function loadMembers() {
       ...item.data()
     }));
 
-    const total = members.reduce(
-      (sum, member) => sum + (Number(member.points) || 0),
-      0
-    );
+    members.forEach(member => {
+      demoPoints[member.uid] = Number(member.points) || 0;
+    });
 
     document.getElementById("memberCount").textContent =
       members.length + "人";
 
-    document.getElementById("totalPoints").textContent =
-      total.toLocaleString() + " pt";
-
     renderMembers(members);
+    updateTotal();
 
-    status.textContent = members.length + "人の会員情報を取得しました。";
+    status.textContent =
+      members.length + "人の会員情報を取得しました。";
 
   } catch (e) {
-
-    status.textContent = "会員情報の取得に失敗しました。";
     console.error(e);
-
+    status.textContent = "会員情報を取得できませんでした。";
   }
 }
 
-// 会員一覧表示
+function memberNumber(member) {
+  return "WF-" + member.uid.substring(0, 8).toUpperCase();
+}
+
 function renderMembers(list) {
 
   const tbody = document.getElementById("memberList");
@@ -311,44 +401,194 @@ function renderMembers(list) {
 
   list.forEach(member => {
 
-    const number = "WF-" + member.uid.substring(0, 8).toUpperCase();
-
     const tr = document.createElement("tr");
 
     const td1 = document.createElement("td");
-    td1.textContent = number;
+    td1.textContent = memberNumber(member);
 
     const td2 = document.createElement("td");
     td2.textContent =
-      (Number(member.points) || 0).toLocaleString() + " pt";
+      (demoPoints[member.uid] || 0).toLocaleString() + " pt";
 
     const td3 = document.createElement("td");
-    td3.textContent = "登録済み";
+    const button = document.createElement("button");
+    button.textContent = "選択";
+    button.onclick = () => selectMember(member);
 
+    td3.appendChild(button);
     tr.append(td1, td2, td3);
     tbody.appendChild(tr);
 
   });
 }
 
-// 会員番号検索
-document.getElementById("search").addEventListener("input", (e) => {
+function selectMember(member) {
+
+  selectedMember = member;
+
+  document.getElementById("selectedNumber").textContent =
+    memberNumber(member);
+
+  document.getElementById("selectedBalance").textContent =
+    (demoPoints[member.uid] || 0).toLocaleString() + " pt";
+
+  document.getElementById("pointMessage").textContent =
+    "会員を選択しました。";
+
+  showPageById("points");
+}
+
+function showPageById(id) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".menu button").forEach(b => {
+    b.classList.remove("active");
+  });
+
+  const buttons = document.querySelectorAll(".menu button");
+  buttons.forEach(button => {
+    if (
+      (id === "members" && button.textContent === "会員管理") ||
+      (id === "points" && button.textContent === "ポイント管理") ||
+      (id === "history" && button.textContent === "操作履歴")
+    ) {
+      button.classList.add("active");
+    }
+  });
+}
+
+window.showPage = function(id, button) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".menu button").forEach(b => {
+    b.classList.remove("active");
+  });
+
+  button.classList.add("active");
+};
+
+window.executeDemo = function() {
+
+  const message = document.getElementById("pointMessage");
+
+  if (!selectedMember) {
+    message.textContent = "先に会員を選択してください。";
+    return;
+  }
+
+  const amount = Number(document.getElementById("pointAmount").value);
+  const operation = document.getElementById("operation").value;
+  const reason = document.getElementById("reason").value;
+
+  if (!Number.isInteger(amount) || amount <= 0) {
+    message.textContent = "正しいポイント数を入力してください。";
+    return;
+  }
+
+  if (!reason) {
+    message.textContent = "変更理由を選択してください。";
+    return;
+  }
+
+  const current = demoPoints[selectedMember.uid] || 0;
+
+  if (operation === "subtract" && amount > current) {
+    message.textContent = "保有ポイントが不足しています。";
+    return;
+  }
+
+  const confirmText =
+    memberNumber(selectedMember) + " に " +
+    amount + " ptを" +
+    (operation === "add" ? "付与" : "減算") +
+    "しますか？\n理由：" + reason +
+    "\n※デモ操作であり、実際のデータは変更されません。";
+
+  if (!confirm(confirmText)) return;
+
+  demoPoints[selectedMember.uid] =
+    operation === "add" ? current + amount : current - amount;
+
+  histories.unshift({
+    date: new Date().toLocaleString("ja-JP"),
+    number: memberNumber(selectedMember),
+    operation: operation === "add" ? "付与" : "減算",
+    amount: amount,
+    reason: reason
+  });
+
+  document.getElementById("selectedBalance").textContent =
+    demoPoints[selectedMember.uid].toLocaleString() + " pt";
+
+  document.getElementById("pointAmount").value = "";
+  document.getElementById("reason").value = "";
+
+  message.textContent = "デモ操作が完了しました。";
+
+  renderMembers(members);
+  updateTotal();
+  renderHistory();
+};
+
+function updateTotal() {
+  const total = Object.values(demoPoints).reduce(
+    (sum, point) => sum + point, 0
+  );
+
+  document.getElementById("totalPoints").textContent =
+    total.toLocaleString() + " pt";
+}
+
+function renderHistory() {
+
+  const tbody = document.getElementById("historyList");
+  tbody.innerHTML = "";
+
+  if (histories.length === 0) {
+    tbody.innerHTML =
+      "<tr><td colspan='5'>履歴はありません</td></tr>";
+    return;
+  }
+
+  histories.forEach(item => {
+
+    const tr = document.createElement("tr");
+
+    [
+      item.date,
+      item.number,
+      item.operation,
+      item.amount + " pt",
+      item.reason
+    ].forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById("search").addEventListener("input", e => {
 
   const keyword = e.target.value.trim().toUpperCase();
 
-  const filtered = members.filter(member => {
-
-    const number = "WF-" + member.uid.substring(0, 8).toUpperCase();
-
-    return number.includes(keyword);
-
-  });
+  const filtered = members.filter(member =>
+    memberNumber(member).includes(keyword)
+  );
 
   renderMembers(filtered);
-
 });
 
-// ログアウト
 document.getElementById("logoutBtn").onclick = async () => {
   await signOut(auth);
 };
