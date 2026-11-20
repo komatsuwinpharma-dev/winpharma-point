@@ -6,9 +6,7 @@
 <title>WINpharma POINT｜管理者画面</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -23,15 +21,7 @@ header {
   padding: 20px;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
-
-header p {
-  margin: 6px 0 0;
-  font-size: 13px;
-}
+header h1 { margin: 0; font-size: 22px; }
 
 .container {
   max-width: 1100px;
@@ -39,60 +29,46 @@ header p {
   padding: 0 15px;
 }
 
-.notice {
-  background: #fff4e5;
-  border-left: 5px solid #f39824;
-  padding: 12px;
+.card, .section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
   margin-bottom: 20px;
-  font-size: 13px;
+  box-shadow: 0 2px 8px #0000000a;
 }
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  border: 1px solid #d5dce5;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+button {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 7px;
+  background: #174b83;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.orange { background: #f39824; }
+
+.error { color: #d33; }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 15px;
-  margin-bottom: 25px;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px #0000000a;
-}
-
-.card p {
-  margin: 0;
-  color: #718096;
-  font-size: 13px;
-}
-
-.card h2 {
-  margin: 10px 0 0;
+.cards h2 {
   color: #174b83;
   font-size: 28px;
-}
-
-.section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px #0000000a;
-}
-
-.section h2 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-.search {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d5dce5;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 15px;
 }
 
 table {
@@ -107,54 +83,14 @@ th, td {
   font-size: 14px;
 }
 
-th {
-  background: #f7f9fc;
-}
+th { background: #f7f9fc; }
 
-button {
-  border: none;
-  border-radius: 7px;
-  padding: 10px 15px;
-  cursor: pointer;
-  font-size: 14px;
-}
+.table-wrap { overflow-x: auto; }
 
-.blue {
-  background: #174b83;
-  color: white;
-}
+#dashboard { display: none; }
 
-.orange {
-  background: #f39824;
-  color: white;
-}
-
-.menu {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.menu button {
-  background: white;
-  border: 1px solid #dce3ec;
-  color: #174b83;
-}
-
-.menu button.active {
-  background: #174b83;
-  color: white;
-}
-
-@media (max-width: 650px) {
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .section {
-    overflow-x: auto;
-  }
+@media(max-width:600px) {
+  .cards { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -168,97 +104,255 @@ button {
 
 <div class="container">
 
-  <div class="notice">
-    ※ 現在は画面デザインの試作品です。表示される数字・会員情報はサンプルです。
+  <div id="loginArea" class="card">
+    <h2>管理者ログイン</h2>
+
+    <input id="email" type="email"
+      placeholder="メールアドレス">
+
+    <input id="password" type="password"
+      placeholder="パスワード">
+
+    <button id="loginBtn">ログイン</button>
+
+    <p id="loginError" class="error"></p>
   </div>
 
-  <div class="cards">
+  <div id="dashboard">
+
     <div class="card">
-      <p>総会員数</p>
-      <h2>0人</h2>
+      <p>ログイン中：<span id="adminEmail"></span></p>
+      <button id="logoutBtn" class="orange">ログアウト</button>
     </div>
 
-    <div class="card">
-      <p>発行ポイント総数</p>
-      <h2>0 pt</h2>
+    <div class="cards">
+      <div class="card">
+        <p>総会員数</p>
+        <h2 id="memberCount">0人</h2>
+      </div>
+
+      <div class="card">
+        <p>保有ポイント合計</p>
+        <h2 id="totalPoints">0 pt</h2>
+      </div>
     </div>
 
-    <div class="card">
-      <p>景品交換件数</p>
-      <h2>0件</h2>
+    <div class="section">
+      <h2>会員一覧</h2>
+
+      <input
+        id="search"
+        placeholder="会員番号で検索"
+      >
+
+      <p id="status">会員情報を読み込み中...</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>会員番号</th>
+              <th>保有ポイント</th>
+              <th>登録状況</th>
+            </tr>
+          </thead>
+
+          <tbody id="memberList"></tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <div class="menu">
-    <button class="active" onclick="showSection('members',this)">会員管理</button>
-    <button onclick="showSection('points',this)">ポイント管理</button>
-    <button onclick="showSection('rewards',this)">景品管理</button>
-    <button onclick="showSection('history',this)">交換履歴</button>
-  </div>
-
-  <div class="section" id="members">
-    <h2>会員一覧</h2>
-
-    <input
-      class="search"
-      type="text"
-      id="searchInput"
-      placeholder="会員番号で検索"
-      oninput="searchMembers()"
-    >
-
-    <table>
-      <thead>
-        <tr>
-          <th>会員番号</th>
-          <th>保有ポイント</th>
-          <th>登録状況</th>
-        </tr>
-      </thead>
-      <tbody id="memberList">
-        <tr>
-          <td colspan="3">まだ会員データはありません</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="section" id="points" style="display:none">
-    <h2>ポイント管理</h2>
-    <p>会員へのポイント付与・減算機能を追加予定です。</p>
-  </div>
-
-  <div class="section" id="rewards" style="display:none">
-    <h2>景品管理</h2>
-    <p>景品の追加・編集・交換ポイント設定機能を追加予定です。</p>
-  </div>
-
-  <div class="section" id="history" style="display:none">
-    <h2>交換履歴</h2>
-    <p>景品交換履歴の確認機能を追加予定です。</p>
   </div>
 
 </div>
 
-<script>
-function showSection(id, button) {
-  document.querySelectorAll(".section").forEach(section => {
-    section.style.display = "none";
-  });
+<script type="module">
 
-  document.getElementById(id).style.display = "block";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-  document.querySelectorAll(".menu button").forEach(btn => {
-    btn.classList.remove("active");
-  });
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  button.classList.add("active");
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Firebase設定
+const firebaseConfig = {
+  apiKey: "AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
+  authDomain: "winpharma-point.firebaseapp.com",
+  projectId: "winpharma-point",
+  storageBucket: "winpharma-point.firebasestorage.app",
+  messagingSenderId: "1045028388131",
+  appId: "1:1045028388131:web:2847eaf400a71755d62096",
+  measurementId: "G-SHM8XCJP9W"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let members = [];
+
+// ログイン
+document.getElementById("loginBtn").onclick = async () => {
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const error = document.getElementById("loginError");
+
+  error.textContent = "";
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    error.textContent = "ログインできません。入力内容を確認してください。";
+  }
+};
+
+// ログイン状態確認
+onAuthStateChanged(auth, async (user) => {
+
+  if (!user) {
+    document.getElementById("loginArea").style.display = "block";
+    document.getElementById("dashboard").style.display = "none";
+    return;
+  }
+
+  try {
+
+    // 管理者情報を確認
+    const adminRef = doc(db, "admins", user.uid);
+    const adminSnap = await getDoc(adminRef);
+
+    if (!adminSnap.exists() || adminSnap.data().role !== "admin") {
+      await signOut(auth);
+      document.getElementById("loginError").textContent =
+        "管理者権限がありません。";
+      return;
+    }
+
+    document.getElementById("loginArea").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("adminEmail").textContent = user.email;
+
+    await loadMembers();
+
+  } catch (e) {
+
+    document.getElementById("loginError").textContent =
+      "データを取得できません。権限設定を確認してください。";
+
+    console.error(e);
+    await signOut(auth);
+  }
+});
+
+// 会員一覧取得
+async function loadMembers() {
+
+  const status = document.getElementById("status");
+  status.textContent = "読み込み中...";
+
+  try {
+
+    const snapshot = await getDocs(collection(db, "members"));
+
+    members = snapshot.docs.map(item => ({
+      uid: item.id,
+      ...item.data()
+    }));
+
+    const total = members.reduce(
+      (sum, member) => sum + (Number(member.points) || 0),
+      0
+    );
+
+    document.getElementById("memberCount").textContent =
+      members.length + "人";
+
+    document.getElementById("totalPoints").textContent =
+      total.toLocaleString() + " pt";
+
+    renderMembers(members);
+
+    status.textContent = members.length + "人の会員情報を取得しました。";
+
+  } catch (e) {
+
+    status.textContent = "会員情報の取得に失敗しました。";
+    console.error(e);
+
+  }
 }
 
-function searchMembers() {
-  const keyword = document.getElementById("searchInput").value;
-  console.log("検索キーワード:", keyword);
+// 会員一覧表示
+function renderMembers(list) {
+
+  const tbody = document.getElementById("memberList");
+  tbody.innerHTML = "";
+
+  if (list.length === 0) {
+    tbody.innerHTML =
+      "<tr><td colspan='3'>該当する会員はいません</td></tr>";
+    return;
+  }
+
+  list.forEach(member => {
+
+    const number = "WF-" + member.uid.substring(0, 8).toUpperCase();
+
+    const tr = document.createElement("tr");
+
+    const td1 = document.createElement("td");
+    td1.textContent = number;
+
+    const td2 = document.createElement("td");
+    td2.textContent =
+      (Number(member.points) || 0).toLocaleString() + " pt";
+
+    const td3 = document.createElement("td");
+    td3.textContent = "登録済み";
+
+    tr.append(td1, td2, td3);
+    tbody.appendChild(tr);
+
+  });
 }
+
+// 会員番号検索
+document.getElementById("search").addEventListener("input", (e) => {
+
+  const keyword = e.target.value.trim().toUpperCase();
+
+  const filtered = members.filter(member => {
+
+    const number = "WF-" + member.uid.substring(0, 8).toUpperCase();
+
+    return number.includes(keyword);
+
+  });
+
+  renderMembers(filtered);
+
+});
+
+// ログアウト
+document.getElementById("logoutBtn").onclick = async () => {
+  await signOut(auth);
+};
+
 </script>
 
 </body>
