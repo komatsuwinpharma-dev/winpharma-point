@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WINpharma POINT｜管理者画面</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6fa;
+  color: #263445;
+}
+
+header {
+  background: #174b83;
+  color: white;
+  padding: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+
+.notice {
+  background: #fff4e5;
+  border-left: 5px solid #f39824;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0000000a;
+}
+
+.card p {
+  margin: 0;
+  color: #718096;
+  font-size: 13px;
+}
+
+.card h2 {
+  margin: 10px 0 0;
+  color: #174b83;
+  font-size: 28px;
+}
+
+.section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px #0000000a;
+}
+
+.section h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.search {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d5dce5;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 13px 10px;
+  border-bottom: 1px solid #edf0f4;
+  text-align: left;
+  font-size: 14px;
+}
+
+th {
+  background: #f7f9fc;
+}
+
+button {
+  border: none;
+  border-radius: 7px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.blue {
+  background: #174b83;
+  color: white;
+}
+
+.orange {
+  background: #f39824;
+  color: white;
+}
+
+.menu {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.menu button {
+  background: white;
+  border: 1px solid #dce3ec;
+  color: #174b83;
+}
+
+.menu button.active {
+  background: #174b83;
+  color: white;
+}
+
+@media (max-width: 650px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    overflow-x: auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>WINpharma POINT</h1>
+  <p>管理者専用ダッシュボード</p>
+</header>
+
+<div class="container">
+
+  <div class="notice">
+    ※ 現在は画面デザインの試作品です。表示される数字・会員情報はサンプルです。
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <p>総会員数</p>
+      <h2>0人</h2>
+    </div>
+
+    <div class="card">
+      <p>発行ポイント総数</p>
+      <h2>0 pt</h2>
+    </div>
+
+    <div class="card">
+      <p>景品交換件数</p>
+      <h2>0件</h2>
+    </div>
+  </div>
+
+  <div class="menu">
+    <button class="active" onclick="showSection('members',this)">会員管理</button>
+    <button onclick="showSection('points',this)">ポイント管理</button>
+    <button onclick="showSection('rewards',this)">景品管理</button>
+    <button onclick="showSection('history',this)">交換履歴</button>
+  </div>
+
+  <div class="section" id="members">
+    <h2>会員一覧</h2>
+
+    <input
+      class="search"
+      type="text"
+      id="searchInput"
+      placeholder="会員番号で検索"
+      oninput="searchMembers()"
+    >
+
+    <table>
+      <thead>
+        <tr>
+          <th>会員番号</th>
+          <th>保有ポイント</th>
+          <th>登録状況</th>
+        </tr>
+      </thead>
+      <tbody id="memberList">
+        <tr>
+          <td colspan="3">まだ会員データはありません</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section" id="points" style="display:none">
+    <h2>ポイント管理</h2>
+    <p>会員へのポイント付与・減算機能を追加予定です。</p>
+  </div>
+
+  <div class="section" id="rewards" style="display:none">
+    <h2>景品管理</h2>
+    <p>景品の追加・編集・交換ポイント設定機能を追加予定です。</p>
+  </div>
+
+  <div class="section" id="history" style="display:none">
+    <h2>交換履歴</h2>
+    <p>景品交換履歴の確認機能を追加予定です。</p>
+  </div>
+
+</div>
+
+<script>
+function showSection(id, button) {
+  document.querySelectorAll(".section").forEach(section => {
+    section.style.display = "none";
+  });
+
+  document.getElementById(id).style.display = "block";
+
+  document.querySelectorAll(".menu button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  button.classList.add("active");
+}
+
+function searchMembers() {
+  const keyword = document.getElementById("searchInput").value;
+  console.log("検索キーワード:", keyword);
+}
+</script>
+
+</body>
+</html>
