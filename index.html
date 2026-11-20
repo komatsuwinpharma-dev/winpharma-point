@@ -417,7 +417,7 @@ let scanner = null;
 
 
 // ポイント別QRコードで使用するポイント数
-const allowedPoints = [1,5,10,15,20,25,30,35,40,45,50];
+const allowedPoints = [1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
 
 // 景品一覧（仮）
@@ -657,7 +657,7 @@ async function processQR(text) {
 
   const points = Number(match[1]);
 
-  if(!allowedPoints.includes(points)) {
+  if (!(points === 1 || points === 5 || (points >= 10 && points % 10 === 0))) {
 
     document.getElementById("qrMessage").textContent =
       "無効なポイントQRコードです。";
