@@ -120,14 +120,15 @@ th { background: #f7f9fc; }
 
 .table-wrap { overflow-x: auto; }
 
-.selected {
-  background: #eaf2fc;
-}
-
 .balance {
   font-size: 25px;
   color: #174b83;
   font-weight: bold;
+}
+
+.small-note {
+  font-size: 12px;
+  color: #777;
 }
 
 @media(max-width:600px) {
@@ -156,8 +157,9 @@ th { background: #f7f9fc; }
   <div id="dashboard">
 
     <div class="notice">
-      現在は無料プラン用のデモ画面です。
-      ポイント操作は画面上のみで、実際の会員データは変更されません。
+      現在は無料プラン用のデモ画面です。<br>
+      ポイント操作はこのブラウザ内に保存されます。
+      Firebase上の実際の会員ポイントは変更されません。
     </div>
 
     <div class="card">
@@ -242,6 +244,8 @@ th { background: #f7f9fc; }
     <div id="history" class="section page">
       <h2>ポイント操作履歴（デモ）</h2>
 
+      <p id="historyCount">操作履歴：0件</p>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -253,13 +257,15 @@ th { background: #f7f9fc; }
               <th>理由</th>
             </tr>
           </thead>
-          <tbody id="historyList">
-            <tr>
-              <td colspan="5">履歴はありません</td>
-            </tr>
-          </tbody>
+          <tbody id="historyList"></tbody>
         </table>
       </div>
+
+      <p class="small-note">
+        ※履歴はこのブラウザに保存されます。
+      </p>
+
+      <button class="red" onclick="clearHistory()">履歴を全削除</button>
     </div>
 
   </div>
@@ -287,6 +293,7 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// Firebase設定
 const firebaseConfig = {
   apiKey: "AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
   authDomain: "winpharma-point.firebaseapp.com",
@@ -301,24 +308,75 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// デモデータの保存先
+const STORAGE_KEY = "winpharmaAdminDemoData_v1";
+
+// 保存データ読み込み
+function loadSavedData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+      const data = JSON.parse(saved);
+
+      return {
+        demoPoints: data.demoPoints || {},
+        histories: Array.isArray(data.histories)
+          ? data.histories
+          : []
+      };
+    }
+  } catch (e) {
+    console.error("保存データ読み込みエラー", e);
+  }
+
+  return {
+    demoPoints: {},
+    histories: []
+  };
+}
+
+const savedData = loadSavedData();
+
 let members = [];
 let selectedMember = null;
-let demoPoints = {};
-let histories = [];
+let demoPoints = savedData.demoPoints;
+let histories = savedData.histories;
 
+// デモデータ保存
+function saveDemoData() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        demoPoints,
+        histories
+      })
+    );
+  } catch (e) {
+    console.error("保存エラー", e);
+    alert("データを保存できませんでした。");
+  }
+}
+
+// ログイン
 document.getElementById("loginBtn").onclick = async () => {
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
+
     document.getElementById("loginError").textContent = "";
+
   } catch (e) {
     document.getElementById("loginError").textContent =
       "ログインできません。入力内容を確認してください。";
   }
 };
 
+// ログイン状態確認
 onAuthStateChanged(auth, async (user) => {
 
   if (!user) {
@@ -328,13 +386,16 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
+
     const adminRef = doc(db, "admins", user.uid);
     const adminSnap = await getDoc(adminRef);
 
     if (!adminSnap.exists() || adminSnap.data().role !== "admin") {
       await signOut(auth);
+
       document.getElementById("loginError").textContent =
         "管理者権限がありません。";
+
       return;
     }
 
@@ -344,20 +405,27 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadMembers();
 
+    renderHistory();
+
   } catch (e) {
+
     console.error(e);
+
     document.getElementById("loginError").textContent =
       "データを取得できません。";
+
     await signOut(auth);
   }
 });
 
+// 会員一覧取得
 async function loadMembers() {
 
   const status = document.getElementById("status");
   status.textContent = "読み込み中...";
 
   try {
+
     const snapshot = await getDocs(collection(db, "members"));
 
     members = snapshot.docs.map(item => ({
@@ -366,8 +434,18 @@ async function loadMembers() {
     }));
 
     members.forEach(member => {
-      demoPoints[member.uid] = Number(member.points) || 0;
+
+      // 保存済みのデモポイントがあれば優先
+      if (!Object.prototype.hasOwnProperty.call(
+        demoPoints,
+        member.uid
+      )) {
+        demoPoints[member.uid] = Number(member.points) || 0;
+      }
+
     });
+
+    saveDemoData();
 
     document.getElementById("memberCount").textContent =
       members.length + "人";
@@ -379,23 +457,29 @@ async function loadMembers() {
       members.length + "人の会員情報を取得しました。";
 
   } catch (e) {
+
     console.error(e);
+
     status.textContent = "会員情報を取得できませんでした。";
   }
 }
 
+// 会員番号
 function memberNumber(member) {
   return "WF-" + member.uid.substring(0, 8).toUpperCase();
 }
 
+// 会員一覧表示
 function renderMembers(list) {
 
   const tbody = document.getElementById("memberList");
   tbody.innerHTML = "";
 
   if (list.length === 0) {
+
     tbody.innerHTML =
       "<tr><td colspan='3'>該当する会員はいません</td></tr>";
+
     return;
   }
 
@@ -411,17 +495,20 @@ function renderMembers(list) {
       (demoPoints[member.uid] || 0).toLocaleString() + " pt";
 
     const td3 = document.createElement("td");
+
     const button = document.createElement("button");
     button.textContent = "選択";
     button.onclick = () => selectMember(member);
 
     td3.appendChild(button);
+
     tr.append(td1, td2, td3);
     tbody.appendChild(tr);
 
   });
 }
 
+// 会員選択
 function selectMember(member) {
 
   selectedMember = member;
@@ -438,7 +525,9 @@ function selectMember(member) {
   showPageById("points");
 }
 
+// ページ切り替え
 function showPageById(id) {
+
   document.querySelectorAll(".page").forEach(p => {
     p.classList.remove("active");
   });
@@ -450,7 +539,9 @@ function showPageById(id) {
   });
 
   const buttons = document.querySelectorAll(".menu button");
+
   buttons.forEach(button => {
+
     if (
       (id === "members" && button.textContent === "会員管理") ||
       (id === "points" && button.textContent === "ポイント管理") ||
@@ -458,10 +549,12 @@ function showPageById(id) {
     ) {
       button.classList.add("active");
     }
+
   });
 }
 
 window.showPage = function(id, button) {
+
   document.querySelectorAll(".page").forEach(p => {
     p.classList.remove("active");
   });
@@ -473,8 +566,13 @@ window.showPage = function(id, button) {
   });
 
   button.classList.add("active");
+
+  if (id === "history") {
+    renderHistory();
+  }
 };
 
+// ポイント操作
 window.executeDemo = function() {
 
   const message = document.getElementById("pointMessage");
@@ -514,16 +612,29 @@ window.executeDemo = function() {
 
   if (!confirm(confirmText)) return;
 
+  // ポイント変更
   demoPoints[selectedMember.uid] =
-    operation === "add" ? current + amount : current - amount;
+    operation === "add"
+      ? current + amount
+      : current - amount;
 
+  // 履歴追加
   histories.unshift({
+
     date: new Date().toLocaleString("ja-JP"),
+
     number: memberNumber(selectedMember),
+
     operation: operation === "add" ? "付与" : "減算",
+
     amount: amount,
+
     reason: reason
+
   });
+
+  // 保存
+  saveDemoData();
 
   document.getElementById("selectedBalance").textContent =
     demoPoints[selectedMember.uid].toLocaleString() + " pt";
@@ -531,30 +642,40 @@ window.executeDemo = function() {
   document.getElementById("pointAmount").value = "";
   document.getElementById("reason").value = "";
 
-  message.textContent = "デモ操作が完了しました。";
+  message.textContent = "デモ操作が完了しました。履歴を保存しました。";
 
   renderMembers(members);
   updateTotal();
   renderHistory();
 };
 
+// 合計ポイント
 function updateTotal() {
+
   const total = Object.values(demoPoints).reduce(
-    (sum, point) => sum + point, 0
+    (sum, point) => sum + (Number(point) || 0),
+    0
   );
 
   document.getElementById("totalPoints").textContent =
     total.toLocaleString() + " pt";
 }
 
+// 履歴表示
 function renderHistory() {
 
   const tbody = document.getElementById("historyList");
+
   tbody.innerHTML = "";
 
+  document.getElementById("historyCount").textContent =
+    "操作履歴：" + histories.length + "件";
+
   if (histories.length === 0) {
+
     tbody.innerHTML =
       "<tr><td colspan='5'>履歴はありません</td></tr>";
+
     return;
   }
 
@@ -568,16 +689,42 @@ function renderHistory() {
       item.operation,
       item.amount + " pt",
       item.reason
+
     ].forEach(value => {
+
       const td = document.createElement("td");
       td.textContent = value;
       tr.appendChild(td);
+
     });
 
     tbody.appendChild(tr);
+
   });
 }
 
+// 履歴削除
+window.clearHistory = function() {
+
+  if (histories.length === 0) {
+    alert("削除する履歴はありません。");
+    return;
+  }
+
+  if (!confirm("すべての操作履歴を削除しますか？")) {
+    return;
+  }
+
+  histories = [];
+
+  saveDemoData();
+
+  renderHistory();
+
+  alert("操作履歴を削除しました。");
+};
+
+// 会員検索
 document.getElementById("search").addEventListener("input", e => {
 
   const keyword = e.target.value.trim().toUpperCase();
@@ -589,6 +736,7 @@ document.getElementById("search").addEventListener("input", e => {
   renderMembers(filtered);
 });
 
+// ログアウト
 document.getElementById("logoutBtn").onclick = async () => {
   await signOut(auth);
 };
