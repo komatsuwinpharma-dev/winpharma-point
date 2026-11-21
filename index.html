@@ -420,11 +420,23 @@ let scanner = null;
 const allowedPoints = [1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
 
-// 景品一覧（仮）
+// 景品一覧
 const rewards = [
-  {name:"景品A", points:100, description:"100ポイントで交換"},
-  {name:"景品B", points:300, description:"300ポイントで交換"},
-  {name:"景品C", points:500, description:"500ポイントで交換"}
+  {
+    name: "ウインちゃんぬいぐるみ",
+    points: 100,
+    description: "100ポイントで交換"
+  },
+  {
+    name: "日用品1つ",
+    points: 300,
+    description: "対象の日用品から1つ選べます"
+  },
+  {
+    name: "ウーマンズストーリー",
+    points: 1000,
+    description: "1,000ポイントで交換"
+  }
 ];
 
 
@@ -657,7 +669,7 @@ async function processQR(text) {
 
   const points = Number(match[1]);
 
-  if (!(points === 1 || points === 5 || (points >= 10 && points % 10 === 0))) {
+  if (!allowedPoints.includes(points)) {
 
     document.getElementById("qrMessage").textContent =
       "無効なポイントQRコードです。";
@@ -742,7 +754,7 @@ function updateRewards() {
       </div>
 
       <div>
-        <strong>${reward.points} pt</strong>
+        <strong>${reward.points.toLocaleString()} pt</strong>
         <button class="orange"
           onclick="exchangeReward(${index})">
           交換
