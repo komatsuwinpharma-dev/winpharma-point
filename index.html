@@ -13,41 +13,26 @@
   --orange: #f28c28;
   --bg: #f3f6fa;
 }
-
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: sans-serif;
   background: var(--bg);
   color: #333;
 }
-
 header {
   background: var(--blue);
   color: white;
   padding: 22px 15px;
   text-align: center;
 }
-
-header h1 {
-  margin: 0;
-  font-size: 23px;
-}
-
-header p {
-  margin: 5px 0 0;
-  font-size: 12px;
-}
-
+header h1 { margin: 0; font-size: 23px; }
+header p { margin: 5px 0 0; font-size: 12px; }
 .container {
   max-width: 480px;
   margin: auto;
   padding: 18px;
 }
-
 .card {
   background: white;
   border-radius: 15px;
@@ -55,12 +40,7 @@ header p {
   margin-bottom: 16px;
   box-shadow: 0 3px 12px rgba(0,0,0,.05);
 }
-
-h2 {
-  font-size: 18px;
-  margin-top: 0;
-}
-
+h2 { font-size: 18px; margin-top: 0; }
 input {
   width: 100%;
   padding: 14px;
@@ -69,7 +49,6 @@ input {
   border-radius: 8px;
   font-size: 15px;
 }
-
 button {
   width: 100%;
   border: none;
@@ -80,22 +59,9 @@ button {
   cursor: pointer;
   margin-top: 8px;
 }
-
-.primary {
-  background: var(--blue);
-  color: white;
-}
-
-.orange {
-  background: var(--orange);
-  color: white;
-}
-
-.sub {
-  background: #edf2f7;
-  color: #333;
-}
-
+.primary { background: var(--blue); color: white; }
+.orange { background: var(--orange); color: white; }
+.sub { background: #edf2f7; color: #333; }
 .balance {
   background: linear-gradient(135deg, #1765a8, #368acb);
   color: white;
@@ -103,17 +69,12 @@ button {
   padding: 28px 15px;
   border-radius: 15px;
 }
-
-.balance small {
-  font-size: 14px;
-}
-
+.balance small { font-size: 14px; }
 .balance strong {
   display: block;
   font-size: 43px;
   margin: 10px 0;
 }
-
 .member-number {
   font-size: 13px;
   color: #666;
@@ -121,13 +82,11 @@ button {
   margin-top: 15px;
   word-break: break-all;
 }
-
 .menu-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-
 .menu-grid button {
   min-height: 90px;
   background: white;
@@ -135,11 +94,7 @@ button {
   color: var(--blue);
   font-size: 15px;
 }
-
-.hidden {
-  display: none !important;
-}
-
+.hidden { display: none !important; }
 .notice {
   background: #fff5e8;
   padding: 12px;
@@ -148,7 +103,6 @@ button {
   line-height: 1.6;
   color: #80521c;
 }
-
 .item {
   border-bottom: 1px solid #eee;
   padding: 12px 0;
@@ -156,31 +110,11 @@ button {
   justify-content: space-between;
   gap: 10px;
 }
-
-.item:last-child {
-  border-bottom: none;
-}
-
-.positive {
-  color: #e77b19;
-  font-weight: bold;
-}
-
-.negative {
-  color: #1765a8;
-  font-weight: bold;
-}
-
-.small {
-  font-size: 12px;
-  color: #888;
-}
-
-#reader {
-  width: 100%;
-  overflow: hidden;
-}
-
+.item:last-child { border-bottom: none; }
+.positive { color: #e77b19; font-weight: bold; }
+.negative { color: #1765a8; font-weight: bold; }
+.small { font-size: 12px; color: #888; }
+#reader { width: 100%; overflow: hidden; }
 footer {
   text-align: center;
   color: #999;
@@ -199,43 +133,25 @@ footer {
 
 <div class="container">
 
-<!-- ログイン・登録 -->
 <section id="loginScreen">
 
   <div class="card">
     <h2>ログイン</h2>
-
-    <input id="loginEmail" type="email"
-      placeholder="メールアドレス">
-
-    <input id="loginPassword" type="password"
-      placeholder="パスワード">
-
-    <button class="primary" onclick="login()">
-      ログイン
-    </button>
+    <input id="loginEmail" type="email" placeholder="メールアドレス">
+    <input id="loginPassword" type="password" placeholder="パスワード">
+    <button class="primary" onclick="login()">ログイン</button>
   </div>
 
   <div class="card">
     <h2>新規会員登録</h2>
-
-    <input id="registerEmail" type="email"
-      placeholder="メールアドレス">
-
-    <input id="registerPassword" type="password"
-      placeholder="パスワード（6文字以上）">
-
-    <button class="orange" onclick="register()">
-      無料で会員登録
-    </button>
+    <input id="registerEmail" type="email" placeholder="メールアドレス">
+    <input id="registerPassword" type="password" placeholder="パスワード（6文字以上）">
+    <button class="orange" onclick="register()">無料で会員登録</button>
   </div>
 
   <p id="authMessage"></p>
-
 </section>
 
-
-<!-- ホーム -->
 <section id="homeScreen" class="hidden">
 
   <div class="balance">
@@ -251,127 +167,62 @@ footer {
 
   <div class="card" style="margin-top:20px">
     <h2>メニュー</h2>
-
     <div class="menu-grid">
-
-      <button onclick="showPage('qrPage')">
-        📷<br>ポイントを貯める
-      </button>
-
-      <button onclick="showPage('historyPage')">
-        📋<br>ポイント履歴
-      </button>
-
-      <button onclick="showPage('rewardPage')">
-        🎁<br>景品と交換
-      </button>
-
-      <button onclick="showPage('memberPage')">
-        👤<br>会員情報
-      </button>
-
+      <button onclick="showPage('qrPage')">📷<br>ポイントを貯める</button>
+      <button onclick="showPage('historyPage')">📋<br>ポイント履歴</button>
+      <button onclick="showPage('rewardPage')">🎁<br>景品と交換</button>
+      <button onclick="showPage('memberPage')">👤<br>会員情報</button>
     </div>
   </div>
 
   <div class="notice">
     ※現在は試作版です。ポイントはデモ用として端末内に保存されます。
   </div>
-
 </section>
 
-
-<!-- QR読み取り -->
 <section id="qrPage" class="hidden">
-
   <div class="card">
     <h2>ポイントを貯める</h2>
-
-    <p>
-      店舗スタッフから提示されたQRコードを
-      カメラで読み取ってください。
-    </p>
-
+    <p>店舗スタッフから提示されたQRコードをカメラで読み取ってください。</p>
     <div id="reader"></div>
-
     <p id="qrMessage"></p>
-
-    <button class="sub" onclick="stopScanner()">
-      読み取りを終了
-    </button>
-
-    <button class="primary" onclick="showPage('homeScreen')">
-      ホームに戻る
-    </button>
+    <button class="sub" onclick="stopScanner()">読み取りを終了</button>
+    <button class="primary" onclick="showPage('homeScreen')">ホームに戻る</button>
   </div>
-
 </section>
 
-
-<!-- 履歴 -->
 <section id="historyPage" class="hidden">
-
   <div class="card">
     <h2>ポイント履歴</h2>
     <div id="historyList"></div>
-
-    <button class="primary" onclick="showPage('homeScreen')">
-      戻る
-    </button>
+    <button class="primary" onclick="showPage('homeScreen')">戻る</button>
   </div>
-
 </section>
 
-
-<!-- 景品交換 -->
 <section id="rewardPage" class="hidden">
-
   <div class="card">
     <h2>景品交換</h2>
-
-    <p>
-      現在のポイント：
-      <strong id="rewardBalance">0</strong> pt
-    </p>
-
-    <div id="rewardList"></div>
-
-    <button class="primary" onclick="showPage('homeScreen')">
-      戻る
-    </button>
+    <p>現在のポイント：<strong id="rewardBalance">0</strong> pt</p>
+    <div id="rewardList">景品を読み込んでいます...</div>
+    <button class="primary" onclick="showPage('homeScreen')">戻る</button>
   </div>
-
 </section>
 
-
-<!-- 会員情報 -->
 <section id="memberPage" class="hidden">
-
   <div class="card">
     <h2>会員情報</h2>
-
     <p>メールアドレス</p>
     <strong id="memberEmail"></strong>
-
     <p style="margin-top:20px">会員番号</p>
     <strong id="memberNumber2"></strong>
-
-    <button class="sub" onclick="logout()">
-      ログアウト
-    </button>
-
-    <button class="primary" onclick="showPage('homeScreen')">
-      戻る
-    </button>
+    <button class="sub" onclick="logout()">ログアウト</button>
+    <button class="primary" onclick="showPage('homeScreen')">戻る</button>
   </div>
-
 </section>
 
 </div>
 
-<footer>
-  WINpharma POINT
-</footer>
-
+<footer>WINpharma POINT</footer>
 
 <script type="module">
 
@@ -392,12 +243,12 @@ import {
   doc,
   getDoc,
   setDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  getDocs
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
-// Firebase設定
 const firebaseConfig = {
   apiKey: "AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
   authDomain: "winpharma-point.firebaseapp.com",
@@ -414,31 +265,23 @@ const db = getFirestore(app);
 
 let currentUser = null;
 let scanner = null;
+let rewards = [];
 
-
-// ポイント別QRコードで使用するポイント数
-const allowedPoints = [1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-
-
-// 景品一覧
-const rewards = [
-  {
-    name: "ウインちゃんぬいぐるみ",
-    points: 100,
-    description: "100ポイントで交換"
-  },
-  {
-    name: "日用品1つ",
-    points: 300,
-    description: "対象の日用品から1つ選べます"
-  },
-  {
-    name: "ウーマンズストーリー",
-    points: 1000,
-    description: "1,000ポイントで交換"
-  }
+const allowedPoints = [
+  1, 5, 10, 20, 30, 40, 50, 60,
+  70, 80, 90, 100
 ];
 
+// HTML表示用の文字変換
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
 
 // デモデータ
 function getDemoData() {
@@ -455,18 +298,12 @@ function saveDemoData(data) {
   );
 }
 
-
 // 会員登録
 window.register = async function() {
-
-  const email =
-    document.getElementById("registerEmail").value.trim();
-
-  const password =
-    document.getElementById("registerPassword").value;
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
 
   try {
-
     const result = await createUserWithEmailAndPassword(
       auth, email, password
     );
@@ -480,43 +317,29 @@ window.register = async function() {
     });
 
     alert("会員登録が完了しました！");
-
   } catch(error) {
     alert("登録できませんでした：" + error.message);
   }
 };
 
-
 // ログイン
 window.login = async function() {
-
-  const email =
-    document.getElementById("loginEmail").value.trim();
-
-  const password =
-    document.getElementById("loginPassword").value;
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
   try {
-
-    await signInWithEmailAndPassword(
-      auth, email, password
-    );
-
+    await signInWithEmailAndPassword(auth, email, password);
   } catch(error) {
     alert("ログインできませんでした：" + error.message);
   }
 };
 
-
 // ログイン状態の確認
 onAuthStateChanged(auth, async (user) => {
-
   if(user) {
-
     currentUser = user;
 
     try {
-
       const ref = doc(db, "members", user.uid);
       const snap = await getDoc(ref);
 
@@ -528,17 +351,12 @@ onAuthStateChanged(auth, async (user) => {
         });
       }
 
-      const memberNumber = "WF-" +
-        user.uid.substring(0,8).toUpperCase();
+      const memberNumber =
+        "WF-" + user.uid.substring(0,8).toUpperCase();
 
-      document.getElementById("memberNumber").textContent =
-        memberNumber;
-
-      document.getElementById("memberNumber2").textContent =
-        memberNumber;
-
-      document.getElementById("memberEmail").textContent =
-        user.email;
+      document.getElementById("memberNumber").textContent = memberNumber;
+      document.getElementById("memberNumber2").textContent = memberNumber;
+      document.getElementById("memberEmail").textContent = user.email;
 
       showPage("homeScreen");
       updateBalance();
@@ -548,18 +366,13 @@ onAuthStateChanged(auth, async (user) => {
     }
 
   } else {
-
     currentUser = null;
     showPage("loginScreen");
-
   }
-
 });
-
 
 // 画面切り替え
 window.showPage = function(page) {
-
   stopScanner();
 
   const pages = [
@@ -580,34 +393,24 @@ window.showPage = function(page) {
   if(page === "historyPage") updateHistory();
   if(page === "rewardPage") updateRewards();
   if(page === "qrPage") startScanner();
-
 };
-
 
 // ポイント表示
 function updateBalance() {
-
   if(!currentUser) return;
 
   const data = getDemoData();
 
-  document.getElementById("pointBalance").textContent =
-    data.points;
-
-  document.getElementById("rewardBalance").textContent =
-    data.points;
-
+  document.getElementById("pointBalance").textContent = data.points;
+  document.getElementById("rewardBalance").textContent = data.points;
 }
-
 
 // QR読み取り開始
 async function startScanner() {
-
   document.getElementById("qrMessage").textContent =
     "QRコードを読み取ってください。";
 
   try {
-
     scanner = new Html5Qrcode("reader");
 
     await scanner.start(
@@ -617,27 +420,19 @@ async function startScanner() {
         qrbox: { width: 230, height: 230 }
       },
       (decodedText) => {
-
         processQR(decodedText);
-
       }
     );
 
   } catch(error) {
-
     document.getElementById("qrMessage").textContent =
       "カメラを起動できません。HTTPS接続とカメラの許可を確認してください。";
-
   }
-
 }
-
 
 // QR読み取り終了
 window.stopScanner = async function() {
-
   if(scanner) {
-
     try {
       if(scanner.isScanning) {
         await scanner.stop();
@@ -646,34 +441,26 @@ window.stopScanner = async function() {
     } catch(error) {}
 
     scanner = null;
-
   }
-
 };
-
 
 // QRコードの処理
 async function processQR(text) {
-
   await stopScanner();
 
   const match = text.match(/^WINPHARMA_POINT:(\d+)$/);
 
   if(!match) {
-
     document.getElementById("qrMessage").textContent =
       "対応していないQRコードです。";
-
     return;
   }
 
   const points = Number(match[1]);
 
-  if (!allowedPoints.includes(points)) {
-
+  if(!allowedPoints.includes(points)) {
     document.getElementById("qrMessage").textContent =
       "無効なポイントQRコードです。";
-
     return;
   }
 
@@ -688,24 +475,18 @@ async function processQR(text) {
   });
 
   saveDemoData(data);
-
   updateBalance();
 
   document.getElementById("qrMessage").textContent =
     points + "ポイント獲得しました！";
 
   alert(points + "ポイント獲得しました！");
-
   showPage("homeScreen");
-
 }
-
 
 // 履歴表示
 function updateHistory() {
-
   const data = getDemoData();
-
   const list = document.getElementById("historyList");
 
   if(data.history.length === 0) {
@@ -714,81 +495,102 @@ function updateHistory() {
   }
 
   list.innerHTML = data.history.map(item => {
-
-    const cls = item.type === "獲得"
-      ? "positive"
-      : "negative";
-
+    const cls = item.type === "獲得" ? "positive" : "negative";
     const sign = item.type === "獲得" ? "+" : "-";
 
     return `
       <div class="item">
         <div>
-          <strong>${item.type}</strong><br>
-          <span class="small">${item.date}</span>
+          <strong>${escapeHTML(item.type)}</strong><br>
+          <span class="small">${escapeHTML(item.date)}</span>
         </div>
         <div class="${cls}">
-          ${sign}${item.points} pt
+          ${sign}${Number(item.points)} pt
         </div>
       </div>
     `;
-
   }).join("");
-
 }
 
+// Firebaseから景品を読み込む
+async function loadRewards() {
+  const snapshot = await getDocs(collection(db, "prizes"));
 
-// 景品一覧
-function updateRewards() {
+  rewards = snapshot.docs
+    .map(item => ({
+      id: item.id,
+      ...item.data()
+    }))
+    .filter(reward => reward.active === true)
+    .sort((a, b) => Number(a.points) - Number(b.points));
+}
 
+// 景品一覧表示
+async function updateRewards() {
   const data = getDemoData();
-
   const list = document.getElementById("rewardList");
 
-  list.innerHTML = rewards.map((reward,index) => `
+  document.getElementById("rewardBalance").textContent = data.points;
+  list.innerHTML = "景品を読み込んでいます...";
 
-    <div class="item">
-      <div>
-        <strong>${reward.name}</strong><br>
-        <span class="small">${reward.description}</span>
+  try {
+    await loadRewards();
+
+    if(rewards.length === 0) {
+      list.innerHTML = "現在交換できる景品はありません。";
+      return;
+    }
+
+    list.innerHTML = rewards.map((reward, index) => `
+      <div class="item">
+        <div>
+          <strong>${escapeHTML(reward.name)}</strong><br>
+          <span class="small">${escapeHTML(reward.description || "")}</span>
+        </div>
+        <div>
+          <strong>${Number(reward.points).toLocaleString()} pt</strong>
+          <button class="orange"
+            onclick="exchangeReward(${index})">
+            交換
+          </button>
+        </div>
       </div>
+    `).join("");
 
-      <div>
-        <strong>${reward.points.toLocaleString()} pt</strong>
-        <button class="orange"
-          onclick="exchangeReward(${index})">
-          交換
-        </button>
-      </div>
-    </div>
-
-  `).join("");
-
+  } catch(error) {
+    console.error(error);
+    list.innerHTML =
+      "景品を読み込めませんでした。時間をおいて再度お試しください。";
+  }
 }
-
 
 // 景品交換
 window.exchangeReward = function(index) {
-
   const reward = rewards[index];
 
-  const data = getDemoData();
+  if(!reward) {
+    alert("景品情報が見つかりません。");
+    return;
+  }
 
-  if(data.points < reward.points) {
+  const data = getDemoData();
+  const points = Number(reward.points);
+
+  if(data.points < points) {
     alert("ポイントが足りません。");
     return;
   }
 
   if(!confirm(
-    reward.name + "を" + reward.points +
+    reward.name + "を" + points +
     "ポイントで交換しますか？"
   )) return;
 
-  data.points -= reward.points;
+  data.points -= points;
 
   data.history.unshift({
     type: "交換",
-    points: reward.points,
+    points: points,
     date: new Date().toLocaleString("ja-JP")
   });
 
@@ -798,17 +600,12 @@ window.exchangeReward = function(index) {
   updateRewards();
 
   alert("交換しました！");
-
 };
-
 
 // ログアウト
 window.logout = async function() {
-
   await signOut(auth);
-
   alert("ログアウトしました。");
-
 };
 
 </script>
