@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -108,6 +109,7 @@ button {
   padding: 12px 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
 }
 .item:last-child { border-bottom: none; }
@@ -115,6 +117,24 @@ button {
 .negative { color: #1765a8; font-weight: bold; }
 .small { font-size: 12px; color: #888; }
 #reader { width: 100%; overflow: hidden; }
+.center { text-align: center; }
+.reward-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--blue);
+  margin: 20px 0;
+}
+.big-points {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--orange);
+  margin: 15px 0;
+}
+.success-mark {
+  font-size: 55px;
+  color: #2e9d63;
+  margin: 15px 0;
+}
 footer {
   text-align: center;
   color: #999;
@@ -208,6 +228,89 @@ footer {
   </div>
 </section>
 
+<!-- 交換内容の確認画面 -->
+<section id="exchangePage" class="hidden">
+  <div class="card center">
+    <h2>交換内容の確認</h2>
+
+    <p>交換する景品</p>
+    <div class="reward-name" id="confirmRewardName"></div>
+
+    <p>必要ポイント</p>
+    <div class="big-points" id="confirmRewardPoints"></div>
+
+    <p>交換後のポイント</p>
+    <strong id="confirmRemainingPoints"></strong> pt
+
+    <div class="notice" style="margin-top:20px;text-align:left">
+      内容を確認してください。<br>
+      次の画面でスタッフにスマートフォンを提示し、交換を確定してもらってください。
+    </div>
+
+    <button class="orange" onclick="goToStaffConfirm()">
+      スタッフ確認画面へ進む
+    </button>
+
+    <button class="sub" onclick="showPage('rewardPage')">
+      キャンセル
+    </button>
+  </div>
+</section>
+
+<!-- スタッフ確認画面 -->
+<section id="staffConfirmPage" class="hidden">
+  <div class="card center">
+    <h2>スタッフ確認</h2>
+
+    <div class="notice">
+      お客様のスマートフォンをスタッフに提示してください。<br>
+      スタッフが景品とポイント数を確認してから、交換を確定してください。
+    </div>
+
+    <p style="margin-top:25px">交換する景品</p>
+    <div class="reward-name" id="staffRewardName"></div>
+
+    <p>使用ポイント</p>
+    <div class="big-points" id="staffRewardPoints"></div>
+
+    <p>交換後の残高</p>
+    <strong id="staffRemainingPoints"></strong> pt
+
+    <button class="orange" onclick="completeExchange()">
+      交換確定
+    </button>
+
+    <button class="sub" onclick="showPage('exchangePage')">
+      戻る
+    </button>
+  </div>
+</section>
+
+<!-- 交換完了画面 -->
+<section id="completePage" class="hidden">
+  <div class="card center">
+    <div class="success-mark">✓</div>
+    <h2>交換が完了しました！</h2>
+
+    <p>交換した景品</p>
+    <div class="reward-name" id="completeRewardName"></div>
+
+    <p>使用ポイント</p>
+    <div class="big-points" id="completeRewardPoints"></div>
+
+    <p>現在のポイント</p>
+    <strong id="completeRemainingPoints"></strong> pt
+
+    <div class="notice" style="margin-top:20px">
+      スタッフに交換完了画面を提示してください。
+    </div>
+
+    <button class="primary" onclick="showPage('homeScreen')">
+      ホームに戻る
+    </button>
+  </div>
+</section>
+
 <section id="memberPage" class="hidden">
   <div class="card">
     <h2>会員情報</h2>
@@ -266,13 +369,13 @@ const db = getFirestore(app);
 let currentUser = null;
 let scanner = null;
 let rewards = [];
+let selectedReward = null;
 
 const allowedPoints = [
   1, 5, 10, 20, 30, 40, 50, 60,
   70, 80, 90, 100
 ];
 
-// HTML表示用の文字変換
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&": "&amp;",
@@ -381,7 +484,10 @@ window.showPage = function(page) {
     "qrPage",
     "historyPage",
     "rewardPage",
-    "memberPage"
+    "memberPage",
+    "exchangePage",
+    "staffConfirmPage",
+    "completePage"
   ];
 
   pages.forEach(id => {
@@ -495,13 +601,15 @@ function updateHistory() {
   }
 
   list.innerHTML = data.history.map(item => {
-    const cls = item.type === "獲得" ? "positive" : "negative";
-    const sign = item.type === "獲得" ? "+" : "-";
+    const isEarn = item.type === "獲得";
+    const cls = isEarn ? "positive" : "negative";
+    const sign = isEarn ? "+" : "-";
 
     return `
       <div class="item">
         <div>
           <strong>${escapeHTML(item.type)}</strong><br>
+          ${item.rewardName ? `<span class="small">${escapeHTML(item.rewardName)}</span><br>` : ""}
           <span class="small">${escapeHTML(item.date)}</span>
         </div>
         <div class="${cls}">
@@ -547,7 +655,7 @@ async function updateRewards() {
           <strong>${escapeHTML(reward.name)}</strong><br>
           <span class="small">${escapeHTML(reward.description || "")}</span>
         </div>
-        <div>
+        <div style="min-width:105px;text-align:right">
           <strong>${Number(reward.points).toLocaleString()} pt</strong>
           <button class="orange"
             onclick="exchangeReward(${index})">
@@ -564,7 +672,7 @@ async function updateRewards() {
   }
 }
 
-// 景品交換
+// 景品を選択して確認画面へ
 window.exchangeReward = function(index) {
   const reward = rewards[index];
 
@@ -576,30 +684,101 @@ window.exchangeReward = function(index) {
   const data = getDemoData();
   const points = Number(reward.points);
 
+  if(!Number.isFinite(points) || points <= 0) {
+    alert("景品のポイント設定に問題があります。");
+    return;
+  }
+
   if(data.points < points) {
     alert("ポイントが足りません。");
     return;
   }
 
-  if(!confirm(
-    reward.name + "を" + points +
-    "ポイントで交換しますか？"
-  )) return;
+  selectedReward = reward;
+
+  document.getElementById("confirmRewardName").textContent = reward.name;
+  document.getElementById("confirmRewardPoints").textContent =
+    points.toLocaleString() + " pt";
+  document.getElementById("confirmRemainingPoints").textContent =
+    (data.points - points).toLocaleString();
+
+  showPage("exchangePage");
+};
+
+// スタッフ確認画面へ
+window.goToStaffConfirm = function() {
+  if(!selectedReward) {
+    alert("景品を選び直してください。");
+    showPage("rewardPage");
+    return;
+  }
+
+  const data = getDemoData();
+  const points = Number(selectedReward.points);
+
+  if(data.points < points) {
+    alert("ポイントが足りません。");
+    showPage("rewardPage");
+    return;
+  }
+
+  document.getElementById("staffRewardName").textContent =
+    selectedReward.name;
+  document.getElementById("staffRewardPoints").textContent =
+    points.toLocaleString() + " pt";
+  document.getElementById("staffRemainingPoints").textContent =
+    (data.points - points).toLocaleString();
+
+  showPage("staffConfirmPage");
+};
+
+// 交換確定
+window.completeExchange = function() {
+  if(!currentUser || !selectedReward) {
+    alert("交換情報を確認できません。");
+    showPage("rewardPage");
+    return;
+  }
+
+  const data = getDemoData();
+  const points = Number(selectedReward.points);
+
+  if(data.points < points) {
+    alert("ポイントが足りません。");
+    showPage("rewardPage");
+    return;
+  }
+
+  const confirmed = confirm(
+    selectedReward.name + "を交換確定します。\n" +
+    points + "ポイントを使用します。よろしいですか？"
+  );
+
+  if(!confirmed) return;
 
   data.points -= points;
 
   data.history.unshift({
     type: "交換",
     points: points,
+    rewardName: selectedReward.name,
     date: new Date().toLocaleString("ja-JP")
   });
 
   saveDemoData(data);
 
   updateBalance();
-  updateRewards();
 
-  alert("交換しました！");
+  document.getElementById("completeRewardName").textContent =
+    selectedReward.name;
+  document.getElementById("completeRewardPoints").textContent =
+    points.toLocaleString() + " pt";
+  document.getElementById("completeRemainingPoints").textContent =
+    data.points.toLocaleString();
+
+  selectedReward = null;
+
+  showPage("completePage");
 };
 
 // ログアウト
@@ -612,3 +791,4 @@ window.logout = async function() {
 
 </body>
 </html>
+```
