@@ -6,30 +6,32 @@
 <title>WINpharma POINT｜管理者画面</title>
 
 <style>
-* { box-sizing: border-box; }
-
-:root {
-  --blue: #1765a8;
-  --orange: #f28c28;
-  --bg: #f4f6fa;
-  --text: #263445;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   font-family: Arial, "Noto Sans JP", sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: #f4f6fa;
+  color: #263445;
 }
 
 header {
-  background: var(--blue);
+  background: #1765a8;
   color: white;
-  padding: 22px;
+  padding: 20px;
 }
 
-header h1 { margin: 0; font-size: 23px; }
-header p { margin: 6px 0 0; font-size: 13px; }
+header h1 {
+  margin: 0;
+  font-size: 23px;
+}
+
+header p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
 
 .container {
   max-width: 1150px;
@@ -42,183 +44,170 @@ header p { margin: 6px 0 0; font-size: 13px; }
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 18px;
-  box-shadow: 0 2px 9px #0000000a;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
 }
 
-h2 { font-size: 19px; margin: 0 0 16px; }
-h3 { font-size: 15px; margin: 0 0 12px; }
+h2 {
+  font-size: 19px;
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 16px;
+}
 
 input, select, button {
-  font-size: 14px;
+  font-size: 15px;
   padding: 11px;
   border-radius: 7px;
-  border: 1px solid #d7dce5;
+  border: 1px solid #ccd5df;
 }
 
 input, select {
   width: 100%;
-  margin-bottom: 10px;
+  margin: 5px 0 12px;
 }
 
 button {
-  border: none;
-  background: var(--blue);
+  background: #1765a8;
   color: white;
+  border: none;
   cursor: pointer;
   font-weight: bold;
 }
 
-button:hover { opacity: .88; }
-button.orange { background: var(--orange); }
-button.gray { background: #65758a; }
-button.red { background: #d9534f; }
-button.small { padding: 7px 10px; font-size: 12px; }
-
-.login {
-  max-width: 420px;
-  margin: 60px auto;
+button:hover {
+  opacity: .85;
 }
 
-.hidden { display: none !important; }
+button.orange {
+  background: #f28c28;
+}
 
-.nav {
+button.gray {
+  background: #64748b;
+}
+
+button.red {
+  background: #d9534f;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.metric {
+  background: #f8fafc;
+  border-left: 5px solid #1765a8;
+  border-radius: 9px;
+  padding: 16px;
+}
+
+.metric small {
+  color: #64748b;
+}
+
+.metric strong {
+  display: block;
+  font-size: 25px;
+  margin-top: 8px;
+}
+
+.orange-border {
+  border-left-color: #f28c28;
+}
+
+.tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 18px;
 }
 
-.nav button {
-  background: #e3eaf3;
-  color: var(--blue);
+.tabs button {
+  background: #dce5ef;
+  color: #263445;
 }
 
-.nav button.active {
-  background: var(--blue);
+.tabs button.active {
+  background: #1765a8;
   color: white;
 }
 
-.notice {
-  background: #fff5e9;
-  border-left: 4px solid var(--orange);
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  line-height: 1.7;
-  margin-bottom: 18px;
+.tab-content {
+  display: none;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.metric {
-  background: white;
-  border-radius: 12px;
-  padding: 18px;
-  border-top: 4px solid var(--blue);
-  box-shadow: 0 2px 9px #00000008;
-}
-
-.metric.orange { border-top-color: var(--orange); }
-
-.metric span {
-  font-size: 13px;
-  color: #667085;
-}
-
-.metric strong {
+.tab-content.active {
   display: block;
-  font-size: 27px;
-  margin-top: 9px;
-  overflow-wrap: anywhere;
 }
-
-.metric small { color: #8993a1; }
-
-.section { display: none; }
-.section.active { display: block; }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  min-width: 500px;
 }
 
 th, td {
-  padding: 12px 8px;
-  border-bottom: 1px solid #e8ebf0;
+  padding: 11px;
+  border-bottom: 1px solid #e5eaf0;
   text-align: left;
 }
 
-th { background: #f6f8fb; }
-
-.table-wrap { overflow-x: auto; }
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+th {
+  background: #f1f5f9;
 }
 
-.form-grid button { width: 100%; }
-
-.cost-row {
-  display: grid;
-  grid-template-columns: 1fr 130px 100px;
-  gap: 10px;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding: 12px 0;
+.table-wrap {
+  overflow-x: auto;
 }
 
-.cost-row input { margin: 0; }
-
-.status {
+.notice {
+  background: #fff4e5;
+  border-left: 5px solid #f28c28;
+  padding: 12px;
+  border-radius: 7px;
   font-size: 13px;
-  margin-top: 10px;
-  color: var(--blue);
+  line-height: 1.7;
 }
 
-.sim-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+.hidden {
+  display: none !important;
 }
 
-.sim-result {
-  background: #f3f7fc;
-  border-radius: 10px;
+label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.result {
+  background: #edf6ff;
   padding: 15px;
-  margin-top: 10px;
+  border-radius: 8px;
+  margin-top: 12px;
 }
 
-.sim-result strong {
-  display: block;
-  color: var(--blue);
-  font-size: 23px;
-  margin-top: 5px;
-}
-
-.sim-result span {
-  font-size: 13px;
-  color: #667085;
-}
-
-.help {
+footer {
+  text-align: center;
+  color: #94a3b8;
+  padding: 25px;
   font-size: 12px;
-  color: #667085;
-  line-height: 1.6;
 }
 
-@media(max-width:700px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-  .metric strong { font-size: 21px; }
-  .container { padding: 12px; }
-  .form-grid, .sim-grid { grid-template-columns: 1fr; }
-  .cost-row { grid-template-columns: 1fr 100px; }
+@media(max-width:600px) {
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 19px;
+  }
 }
 </style>
 </head>
@@ -227,221 +216,180 @@ th { background: #f6f8fb; }
 
 <header>
   <h1>WINpharma POINT</h1>
-  <p>管理者専用ダッシュボード</p>
+  <p>本部管理者ダッシュボード</p>
 </header>
 
-<div id="loginArea" class="login card">
+<div class="container">
+
+<!-- ログイン -->
+<div id="loginArea" class="card">
   <h2>管理者ログイン</h2>
+
+  <label>メールアドレス</label>
   <input id="email" type="email" placeholder="メールアドレス">
+
+  <label>パスワード</label>
   <input id="password" type="password" placeholder="パスワード">
-  <button onclick="login()" style="width:100%">ログイン</button>
-  <p id="loginMessage" class="status"></p>
+
+  <button onclick="login()">ログイン</button>
+  <p id="loginMessage"></p>
 </div>
 
-<div id="adminArea" class="container hidden">
+<!-- 管理画面 -->
+<div id="adminArea" class="hidden">
 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
-    <div>
-      <strong>管理者ダッシュボード</strong>
-      <div id="adminEmail" style="font-size:12px;color:#667085"></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <div>
+        <strong>管理者ログイン中</strong>
+        <div id="adminEmail" style="font-size:12px;color:#64748b"></div>
+      </div>
+      <button class="gray" onclick="logout()">ログアウト</button>
     </div>
-    <button class="gray small" onclick="logout()">ログアウト</button>
   </div>
 
-  <div class="notice">
-    <strong>デモ画面について</strong><br>
-    ポイント実績・交換履歴はデモ用データです。
-    実際の会員ポイントや景品交換には反映されません。
-    会員数のみFirebaseの登録情報を読み込みます。
+  <div class="tabs">
+    <button class="active" onclick="showTab('dashboard',this)">ダッシュボード</button>
+    <button onclick="showTab('members',this)">会員管理</button>
+    <button onclick="showTab('operations',this)">デモ操作</button>
+    <button onclick="showTab('prizes',this)">景品管理</button>
+    <button onclick="showTab('simulation',this)">運用シミュレーション</button>
   </div>
 
-  <div class="nav">
-    <button class="active" onclick="showSection('dashboard',this)">経営レポート</button>
-    <button onclick="showSection('members',this)">会員一覧</button>
-    <button onclick="showSection('operation',this)">ポイント操作デモ</button>
-    <button onclick="showSection('history',this)">操作履歴</button>
-    <button onclick="showSection('costs',this)">景品原価設定</button>
-    <button onclick="showSection('simulation',this)">運用シミュレーション</button>
-  </div>
+  <!-- ダッシュボード -->
+  <section id="dashboard" class="tab-content active">
 
-  <!-- 経営レポート -->
+    <div class="card">
+      <h2>全体状況</h2>
 
-  <section id="dashboard" class="section active">
+      <div class="grid">
 
-    <h2>会社全体の実績</h2>
+        <div class="metric">
+          <small>登録会員数</small>
+          <strong id="memberCount">0人</strong>
+        </div>
 
-    <div class="grid">
+        <div class="metric">
+          <small>デモ付与ポイント</small>
+          <strong id="issuedPoints">0pt</strong>
+        </div>
 
-      <div class="metric">
-        <span>登録会員数</span>
-        <strong id="memberCount">-</strong>
-        <small>Firebase登録会員</small>
-      </div>
+        <div class="metric">
+          <small>デモ利用ポイント</small>
+          <strong id="usedPoints">0pt</strong>
+        </div>
 
-      <div class="metric">
-        <span>累計付与ポイント</span>
-        <strong id="issuedTotal">0 pt</strong>
-        <small>デモ集計</small>
-      </div>
+        <div class="metric">
+          <small>デモ景品交換回数</small>
+          <strong id="exchangeCount">0回</strong>
+        </div>
 
-      <div class="metric">
-        <span>累計使用ポイント</span>
-        <strong id="usedTotal">0 pt</strong>
-        <small>デモ集計</small>
-      </div>
+        <div class="metric orange-border">
+          <small>デモ景品負担額</small>
+          <strong id="totalPrizeCost">0円</strong>
+        </div>
 
-      <div class="metric">
-        <span>現在の保有ポイント</span>
-        <strong id="balanceTotal">0 pt</strong>
-        <small>付与－使用のデモ集計</small>
-      </div>
+        <div class="metric orange-border">
+          <small>デモ購入金額</small>
+          <strong id="purchaseTotal">0円</strong>
+        </div>
 
-      <div class="metric orange">
-        <span>景品交換回数</span>
-        <strong id="exchangeCount">0 回</strong>
-        <small>デモ集計</small>
-      </div>
-
-      <div class="metric orange">
-        <span>景品交換コスト</span>
-        <strong id="totalCost">0 円</strong>
-        <small>原価×交換個数</small>
-      </div>
-
-      <div class="metric">
-        <span>OTC購入金額</span>
-        <strong id="purchaseTotal">0 円</strong>
-        <small>デモ登録された購入金額</small>
-      </div>
-
-      <div class="metric">
-        <span>ポイント還元率</span>
-        <strong id="returnRate">0.00%</strong>
-        <small>付与ポイント÷購入金額</small>
-      </div>
-
-      <div class="metric orange">
-        <span>景品交換コスト率</span>
-        <strong id="costRate">0.00%</strong>
-        <small>景品コスト÷購入金額</small>
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:18px">
-      <h2>景品別交換実績</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>景品名</th>
-              <th>交換数</th>
-              <th>使用ポイント</th>
-              <th>1個あたり原価</th>
-              <th>交換コスト</th>
-            </tr>
-          </thead>
-          <tbody id="prizeSummary"></tbody>
-        </table>
       </div>
     </div>
 
     <div class="card">
-      <h2>月別ポイント実績</h2>
+      <h2>景品別交換実績（デモ）</h2>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>年月</th>
-              <th>付与ポイント</th>
-              <th>使用ポイント</th>
-              <th>交換回数</th>
-              <th>購入金額</th>
-              <th>交換コスト</th>
+              <th>景品</th>
+              <th>交換数</th>
+              <th>原価</th>
+              <th>会社負担額</th>
             </tr>
           </thead>
-          <tbody id="monthlySummary"></tbody>
+          <tbody id="dashboardPrizeTable"></tbody>
         </table>
       </div>
+    </div>
+
+    <div class="notice">
+      ※会員数はFirebaseから取得しています。
+      ポイント付与・利用・景品交換の実績は、この管理画面のブラウザ内に保存されたデモデータです。
+      実際の全店舗共通実績ではありません。
     </div>
 
   </section>
 
-  <!-- 会員一覧 -->
+  <!-- 会員管理 -->
+  <section id="members" class="tab-content">
 
-  <section id="members" class="section">
     <div class="card">
       <h2>会員一覧</h2>
-      <input id="memberSearch" placeholder="会員UIDで検索" oninput="renderMembers()">
+
+      <input id="memberSearch"
+        placeholder="会員UIDで検索"
+        oninput="renderMembers()">
+
+      <button onclick="loadMembers()">会員情報を再読み込み</button>
+
+      <p id="memberStatus"></p>
+
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
               <th>会員UID</th>
-              <th>登録日</th>
-              <th>登録ポイント</th>
+              <th>ポイント</th>
+              <th>登録日時</th>
             </tr>
           </thead>
           <tbody id="memberTable"></tbody>
         </table>
       </div>
-      <p id="memberMessage" class="status"></p>
     </div>
+
   </section>
 
-  <!-- ポイント操作デモ -->
+  <!-- デモ操作 -->
+  <section id="operations" class="tab-content">
 
-  <section id="operation" class="section">
     <div class="card">
-      <h2>ポイント実績のデモ登録</h2>
+      <h2>ポイント付与のデモ記録</h2>
 
-      <p class="help">
-        デモ用の売上・ポイント実績を登録します。
-        実際の会員ポイントには反映されません。
-      </p>
+      <label>購入金額（円）</label>
+      <input id="demoPurchase" type="number" min="0" placeholder="例：3000">
 
-      <label>操作内容</label>
-      <select id="operationType" onchange="updateOperationForm()">
-        <option value="issue">ポイント付与</option>
-        <option value="use">ポイント使用</option>
-        <option value="exchange">景品交換</option>
-      </select>
+      <label>付与ポイント</label>
+      <input id="demoIssue" type="number" min="0" placeholder="例：30">
 
-      <div id="normalOperation">
-        <label>ポイント数</label>
-        <input id="operationPoints" type="number" min="1" placeholder="例：10">
-      </div>
-
-      <div id="purchaseOperation">
-        <label>OTC購入金額（円）</label>
-        <input id="purchaseAmount" type="number" min="0" placeholder="例：3000">
-        <p class="help">ポイント付与時に入力すると、還元率・コスト率を集計できます。</p>
-      </div>
-
-      <div id="exchangeOperation" class="hidden">
-        <label>交換する景品</label>
-        <select id="exchangePrize"></select>
-
-        <label>交換個数</label>
-        <input id="exchangeQuantity" type="number" min="1" value="1">
-      </div>
-
-      <label>理由・メモ</label>
-      <input id="operationReason" placeholder="例：OTC購入、景品交換など">
-
-      <button class="orange" onclick="addOperation()" style="width:100%">
-        デモ実績を登録する
-      </button>
-
-      <p id="operationMessage" class="status"></p>
+      <button onclick="addIssue()">付与記録を追加</button>
     </div>
-  </section>
 
-  <!-- 操作履歴 -->
-
-  <section id="history" class="section">
     <div class="card">
-      <h2>デモ操作履歴</h2>
+      <h2>ポイント利用のデモ記録</h2>
+
+      <label>利用ポイント</label>
+      <input id="demoUse" type="number" min="1" placeholder="例：100">
+
+      <button class="orange" onclick="addUse()">利用記録を追加</button>
+    </div>
+
+    <div class="card">
+      <h2>景品交換のデモ記録</h2>
+
+      <label>景品</label>
+      <select id="demoPrize"></select>
+
+      <label>交換数</label>
+      <input id="demoExchangeQty" type="number" min="1" value="1">
+
+      <button class="orange" onclick="addExchange()">交換記録を追加</button>
+    </div>
+
+    <div class="card">
+      <h2>デモ履歴</h2>
       <div class="table-wrap">
         <table>
           <thead>
@@ -449,152 +397,102 @@ th { background: #f6f8fb; }
               <th>日時</th>
               <th>内容</th>
               <th>ポイント</th>
-              <th>購入金額</th>
-              <th>景品・個数</th>
-              <th>コスト</th>
-              <th>メモ</th>
+              <th>金額</th>
             </tr>
           </thead>
           <tbody id="historyTable"></tbody>
         </table>
       </div>
 
-      <button class="red small" onclick="clearHistory()">デモ履歴を全削除</button>
+      <button class="red" onclick="clearDemo()">デモ履歴を全削除</button>
     </div>
+
   </section>
 
-  <!-- 原価設定 -->
+  <!-- 景品管理 -->
+  <section id="prizes" class="tab-content">
 
-  <section id="costs" class="section">
     <div class="card">
-      <h2>景品の原価設定</h2>
-      <p class="help">
-        1個あたりの原価を設定します。
-        交換コストは「原価×交換個数」で自動計算されます。
+      <h2>景品ごとの原価設定</h2>
+
+      <p style="font-size:13px;color:#64748b">
+        原価は仮設定です。実際の仕入れ価格に合わせて変更できます。
       </p>
 
-      <div id="costSettings"></div>
+      <div id="prizeSettings"></div>
 
-      <button class="orange" onclick="saveCosts()" style="width:100%;margin-top:15px">
-        原価設定を保存
-      </button>
-
-      <p id="costMessage" class="status"></p>
+      <button onclick="savePrizeSettings()">原価設定を保存</button>
     </div>
+
   </section>
 
-  <!-- 運用シミュレーション -->
-
-  <section id="simulation" class="section">
+  <!-- シミュレーション -->
+  <section id="simulation" class="tab-content">
 
     <div class="card">
-      <h2>WINpharma POINT 運用シミュレーション</h2>
+      <h2>運用シミュレーション</h2>
 
-      <p class="help">
-        会員3,000人規模を想定した月間シミュレーションです。
-        実際の実績ではなく、入力した仮定に基づく試算です。
-      </p>
+      <label>想定会員数</label>
+      <input id="simMembers" type="number" value="3000" oninput="calculateSimulation()">
 
-      <div class="sim-grid">
+      <label>月間利用率（％）</label>
+      <input id="simActiveRate" type="number" value="40" oninput="calculateSimulation()">
 
-        <div>
-          <label>想定会員数</label>
-          <input id="simMembers" type="number" min="1" value="3000">
+      <label>利用者1人あたり月間OTC購入金額（円）</label>
+      <input id="simPurchase" type="number" value="3000" oninput="calculateSimulation()">
 
-          <label>月間利用率（％）</label>
-          <input id="simActiveRate" type="number" min="0" max="100" value="40">
+      <label>ポイント還元率（％）</label>
+      <input id="simReturnRate" type="number" value="1" step="0.1" oninput="calculateSimulation()">
 
-          <label>利用会員1人あたり月間OTC購入額（円）</label>
-          <input id="simPurchase" type="number" min="0" value="3000">
+      <h3>月間景品交換数の想定</h3>
 
-          <label>ポイント還元率（％）</label>
-          <input id="simReturnRate" type="number" min="0" max="100" step="0.1" value="1">
+      <div id="simPrizeInputs"></div>
 
-          <label>付与ポイントの月間使用率（％）</label>
-          <input id="simUseRate" type="number" min="0" max="100" value="30">
+      <div class="result">
+        <h3>月間試算結果</h3>
 
-          <label>使用1ポイントあたり景品原価（円）</label>
-          <input id="simCostPerPoint" type="number" min="0" step="0.1" value="3">
-
-          <button class="orange" onclick="runSimulation()" style="width:100%">
-            シミュレーション実行
-          </button>
-        </div>
-
-        <div>
-          <h3>月間試算結果</h3>
-
-          <div class="sim-result">
-            <span>月間利用会員数</span>
-            <strong id="simActive">0人</strong>
-          </div>
-
-          <div class="sim-result">
-            <span>月間OTC購入金額</span>
-            <strong id="simSales">0円</strong>
-          </div>
-
-          <div class="sim-result">
-            <span>月間付与ポイント</span>
-            <strong id="simIssued">0 pt</strong>
-          </div>
-
-          <div class="sim-result">
-            <span>月間使用ポイント</span>
-            <strong id="simUsed">0 pt</strong>
-          </div>
-
-          <div class="sim-result">
-            <span>月間景品交換コスト</span>
-            <strong id="simCost">0円</strong>
-          </div>
-
-          <div class="sim-result">
-            <span>年間景品交換コスト（単純換算）</span>
-            <strong id="simYearCost">0円</strong>
-          </div>
-        </div>
-
+        <p>月間利用会員数：<strong id="simActive">0人</strong></p>
+        <p>月間OTC売上：<strong id="simSales">0円</strong></p>
+        <p>月間付与ポイント：<strong id="simIssued">0pt</strong></p>
+        <p>月間景品交換ポイント：<strong id="simUsed">0pt</strong></p>
+        <p>月間景品負担額：<strong id="simCost">0円</strong></p>
+        <p>年間景品負担額：<strong id="simYearCost">0円</strong></p>
       </div>
-    </div>
 
-    <div class="notice">
-      <strong>試算条件について</strong><br>
-      初期値は仮の数字です。<br>
-      ・会員数：3,000人<br>
-      ・月間利用率：40％<br>
-      ・利用会員1人あたり月間購入額：3,000円<br>
-      ・ポイント還元率：1％<br>
-      ・月間使用率：30％<br>
-      ・使用1ポイントあたり景品原価：3円<br><br>
-      実際の景品構成・交換率・購入実績に応じて調整してください。
+      <div class="notice" style="margin-top:15px">
+        ※ポイント付与率は仮の試算条件です。
+        景品交換数も想定値であり、実際の交換実績ではありません。
+      </div>
     </div>
 
   </section>
 
 </div>
+</div>
+
+<footer>
+WINpharma POINT 管理者画面｜DEMO
+</footer>
 
 <script type="module">
 
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getAuth,
   signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
   getFirestore,
-  collection,
-  getDocs,
   doc,
-  getDoc
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
@@ -610,7 +508,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const DATA_KEY = "winpharmaAdminDemoData_v2";
+const DATA_KEY = "winpharmaAdminDemoData_v3";
+const PRIZE_KEY = "winpharmaPrizeCosts_v3";
 
 const defaultPrizes = [
   {
@@ -634,44 +533,55 @@ const defaultPrizes = [
 ];
 
 let members = [];
-
+let prizes = loadPrizes();
 let data = loadData();
-let prizes = data.prizes;
 
 function loadData() {
   try {
-    const saved = JSON.parse(localStorage.getItem(DATA_KEY));
+    return JSON.parse(localStorage.getItem(DATA_KEY)) || {
+      history: []
+    };
+  } catch {
+    return { history: [] };
+  }
+}
 
-    if (saved && Array.isArray(saved.histories)) {
-      return {
-        histories: saved.histories,
-        prizes: Array.isArray(saved.prizes)
-          ? saved.prizes
-          : [...defaultPrizes]
-      };
-    }
-  } catch (e) {}
-
-  return {
-    histories: [],
-    prizes: [...defaultPrizes]
-  };
+function loadPrizes() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PRIZE_KEY));
+    return Array.isArray(saved) ? saved : structuredClone(defaultPrizes);
+  } catch {
+    return structuredClone(defaultPrizes);
+  }
 }
 
 function saveData() {
-  data.prizes = prizes;
   localStorage.setItem(DATA_KEY, JSON.stringify(data));
+}
+
+function savePrizes() {
+  localStorage.setItem(PRIZE_KEY, JSON.stringify(prizes));
+}
+
+function yen(value) {
+  return Math.round(value || 0).toLocaleString("ja-JP") + "円";
+}
+
+function number(value) {
+  return Math.round(value || 0).toLocaleString("ja-JP");
 }
 
 window.login = async function() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
+  document.getElementById("loginMessage").textContent = "ログイン中...";
+
   try {
     await signInWithEmailAndPassword(auth, email, password);
-  } catch (e) {
+  } catch (error) {
     document.getElementById("loginMessage").textContent =
-      "ログインできませんでした。メールアドレスとパスワードを確認してください。";
+      "ログインできませんでした：" + error.message;
   }
 };
 
@@ -691,9 +601,8 @@ onAuthStateChanged(auth, async user => {
     const adminSnap = await getDoc(adminRef);
 
     if (!adminSnap.exists() || adminSnap.data().role !== "admin") {
+      alert("管理者権限がありません。");
       await signOut(auth);
-      document.getElementById("loginMessage").textContent =
-        "管理者権限がありません。";
       return;
     }
 
@@ -702,16 +611,31 @@ onAuthStateChanged(auth, async user => {
     document.getElementById("adminEmail").textContent = user.email || "";
 
     await loadMembers();
-    renderAll();
-    runSimulation();
+    refreshAll();
 
-  } catch (e) {
-    document.getElementById("loginMessage").textContent =
-      "管理者情報を確認できませんでした。";
+  } catch (error) {
+    alert("管理者確認に失敗しました：" + error.message);
+    await signOut(auth);
   }
 });
 
-async function loadMembers() {
+window.showTab = function(id, button) {
+  document.querySelectorAll(".tab-content").forEach(el => {
+    el.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tabs button").forEach(el => {
+    el.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+  button.classList.add("active");
+};
+
+window.loadMembers = async function() {
+  const status = document.getElementById("memberStatus");
+  status.textContent = "読み込み中...";
+
   try {
     const snapshot = await getDocs(collection(db, "members"));
 
@@ -721,466 +645,41 @@ async function loadMembers() {
     }));
 
     document.getElementById("memberCount").textContent =
-      members.length.toLocaleString() + " 人";
+      number(members.length) + "人";
 
+    status.textContent = members.length + "人の会員情報を取得しました。";
     renderMembers();
 
-  } catch (e) {
-    document.getElementById("memberCount").textContent = "取得不可";
-    document.getElementById("memberMessage").textContent =
-      "会員情報を読み込めませんでした。";
+  } catch (error) {
+    status.textContent = "会員情報を取得できませんでした：" + error.message;
   }
-}
-
-window.showSection = function(id, button) {
-  document.querySelectorAll(".section").forEach(s => {
-    s.classList.remove("active");
-  });
-
-  document.querySelectorAll(".nav button").forEach(b => {
-    b.classList.remove("active");
-  });
-
-  document.getElementById(id).classList.add("active");
-  button.classList.add("active");
-
-  renderAll();
 };
 
-function yen(n) {
-  return Math.round(n).toLocaleString("ja-JP") + "円";
-}
+window.renderMembers = function() {
+  const keyword = document.getElementById("memberSearch").value.toLowerCase();
 
-function pt(n) {
-  return Math.round(n).toLocaleString("ja-JP") + " pt";
-}
-
-function getStats() {
-  let issued = 0;
-  let used = 0;
-  let exchanges = 0;
-  let totalCost = 0;
-  let purchaseTotal = 0;
-
-  const prizeStats = {};
-
-  prizes.forEach(p => {
-    prizeStats[p.id] = {
-      quantity: 0,
-      points: 0,
-      cost: 0
-    };
-  });
-
-  data.histories.forEach(h => {
-    purchaseTotal += Number(h.purchaseAmount || 0);
-
-    if (h.type === "issue") {
-      issued += h.points || 0;
-    }
-
-    if (h.type === "use" || h.type === "exchange") {
-      used += h.points || 0;
-    }
-
-    if (h.type === "exchange") {
-      exchanges += h.quantity || 0;
-      totalCost += h.cost || 0;
-
-      if (!prizeStats[h.prizeId]) {
-        prizeStats[h.prizeId] = {
-          quantity: 0,
-          points: 0,
-          cost: 0
-        };
-      }
-
-      prizeStats[h.prizeId].quantity += h.quantity || 0;
-      prizeStats[h.prizeId].points += h.points || 0;
-      prizeStats[h.prizeId].cost += h.cost || 0;
-    }
-  });
-
-  return {
-    issued,
-    used,
-    balance: issued - used,
-    exchanges,
-    totalCost,
-    purchaseTotal,
-    prizeStats
-  };
-}
-
-function renderDashboard() {
-  const s = getStats();
-
-  document.getElementById("issuedTotal").textContent = pt(s.issued);
-  document.getElementById("usedTotal").textContent = pt(s.used);
-  document.getElementById("balanceTotal").textContent = pt(s.balance);
-
-  document.getElementById("exchangeCount").textContent =
-    s.exchanges.toLocaleString() + " 回";
-
-  document.getElementById("totalCost").textContent = yen(s.totalCost);
-  document.getElementById("purchaseTotal").textContent = yen(s.purchaseTotal);
-
-  const returnRate = s.purchaseTotal > 0
-    ? s.issued / s.purchaseTotal * 100
-    : 0;
-
-  const costRate = s.purchaseTotal > 0
-    ? s.totalCost / s.purchaseTotal * 100
-    : 0;
-
-  document.getElementById("returnRate").textContent =
-    returnRate.toFixed(2) + "%";
-
-  document.getElementById("costRate").textContent =
-    costRate.toFixed(2) + "%";
-
-  const prizeBody = document.getElementById("prizeSummary");
-  prizeBody.innerHTML = "";
-
-  prizes.forEach(p => {
-    const v = s.prizeStats[p.id] || {
-      quantity: 0,
-      points: 0,
-      cost: 0
-    };
-
-    prizeBody.innerHTML += `
-      <tr>
-        <td>${escapeHtml(p.name)}</td>
-        <td>${v.quantity.toLocaleString()} 個</td>
-        <td>${pt(v.points)}</td>
-        <td>${yen(p.cost)}</td>
-        <td>${yen(v.cost)}</td>
-      </tr>
-    `;
-  });
-
-  const monthly = {};
-
-  data.histories.forEach(h => {
-    const month = (h.date || "").slice(0, 7);
-    if (!month) return;
-
-    if (!monthly[month]) {
-      monthly[month] = {
-        issued: 0,
-        used: 0,
-        exchanges: 0,
-        cost: 0,
-        purchase: 0
-      };
-    }
-
-    monthly[month].purchase += Number(h.purchaseAmount || 0);
-
-    if (h.type === "issue") {
-      monthly[month].issued += h.points || 0;
-    }
-
-    if (h.type === "use" || h.type === "exchange") {
-      monthly[month].used += h.points || 0;
-    }
-
-    if (h.type === "exchange") {
-      monthly[month].exchanges += h.quantity || 0;
-      monthly[month].cost += h.cost || 0;
-    }
-  });
-
-  const monthlyBody = document.getElementById("monthlySummary");
-  monthlyBody.innerHTML = "";
-
-  Object.keys(monthly).sort().reverse().forEach(month => {
-    const m = monthly[month];
-
-    monthlyBody.innerHTML += `
-      <tr>
-        <td>${month}</td>
-        <td>${pt(m.issued)}</td>
-        <td>${pt(m.used)}</td>
-        <td>${m.exchanges} 回</td>
-        <td>${yen(m.purchase)}</td>
-        <td>${yen(m.cost)}</td>
-      </tr>
-    `;
-  });
-
-  if (Object.keys(monthly).length === 0) {
-    monthlyBody.innerHTML =
-      `<tr><td colspan="6">まだデモ実績がありません。</td></tr>`;
-  }
-}
-
-function renderMembers() {
-  const keyword =
-    (document.getElementById("memberSearch")?.value || "")
-      .toLowerCase();
-
-  const filtered = members.filter(m =>
-    m.id.toLowerCase().includes(keyword)
+  const filtered = members.filter(member =>
+    member.id.toLowerCase().includes(keyword)
   );
 
-  const tbody = document.getElementById("memberTable");
-  tbody.innerHTML = "";
+  document.getElementById("memberTable").innerHTML =
+    filtered.map(member => {
+      const date = member.createdAt?.toDate
+        ? member.createdAt.toDate().toLocaleString("ja-JP")
+        : "-";
 
-  filtered.forEach(m => {
-    const date = m.createdAt?.toDate
-      ? m.createdAt.toDate().toLocaleDateString("ja-JP")
-      : "-";
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${escapeHtml(m.id)}</td>
-        <td>${date}</td>
-        <td>${Number(m.points || 0).toLocaleString()} pt</td>
-      </tr>
-    `;
-  });
-
-  if (filtered.length === 0) {
-    tbody.innerHTML =
-      `<tr><td colspan="3">該当する会員がいません。</td></tr>`;
-  }
-}
-
-window.updateOperationForm = function() {
-  const type = document.getElementById("operationType").value;
-
-  document.getElementById("normalOperation")
-    .classList.toggle("hidden", type === "exchange");
-
-  document.getElementById("exchangeOperation")
-    .classList.toggle("hidden", type !== "exchange");
-
-  document.getElementById("purchaseOperation")
-    .classList.toggle("hidden", type !== "issue");
+      return `
+        <tr>
+          <td>${escapeHTML(member.id)}</td>
+          <td>${number(member.points || 0)}pt</td>
+          <td>${date}</td>
+        </tr>
+      `;
+    }).join("") || "<tr><td colspan='3'>該当する会員はいません。</td></tr>";
 };
 
-function renderPrizeSelect() {
-  const select = document.getElementById("exchangePrize");
-
-  select.innerHTML = prizes.map(p => `
-    <option value="${escapeHtml(p.id)}">
-      ${escapeHtml(p.name)}（${p.points}pt）
-    </option>
-  `).join("");
-}
-
-window.addOperation = function() {
-  const type = document.getElementById("operationType").value;
-  const reason = document.getElementById("operationReason").value.trim();
-
-  let points = 0;
-  let prizeId = "";
-  let prizeName = "";
-  let quantity = 0;
-  let cost = 0;
-  let purchaseAmount = 0;
-
-  if (type === "exchange") {
-    prizeId = document.getElementById("exchangePrize").value;
-    const prize = prizes.find(p => p.id === prizeId);
-
-    quantity = Number(document.getElementById("exchangeQuantity").value);
-
-    if (!prize || !Number.isInteger(quantity) || quantity < 1) {
-      alert("景品と交換個数を確認してください。");
-      return;
-    }
-
-    prizeName = prize.name;
-    points = prize.points * quantity;
-    cost = prize.cost * quantity;
-
-  } else {
-    points = Number(document.getElementById("operationPoints").value);
-
-    if (!Number.isInteger(points) || points <= 0) {
-      alert("ポイント数を正しく入力してください。");
-      return;
-    }
-
-    if (type === "issue") {
-      purchaseAmount = Number(
-        document.getElementById("purchaseAmount").value
-      );
-
-      if (!Number.isFinite(purchaseAmount) || purchaseAmount < 0) {
-        alert("購入金額を正しく入力してください。");
-        return;
-      }
-    }
-  }
-
-  if (type === "use" || type === "exchange") {
-    const stats = getStats();
-
-    if (points > stats.balance) {
-      alert("デモ上の保有ポイントが不足しています。先に付与実績を登録してください。");
-      return;
-    }
-  }
-
-  data.histories.unshift({
-    id: Date.now(),
-    date: new Date().toISOString().slice(0, 10),
-    type,
-    points,
-    prizeId,
-    prizeName,
-    quantity,
-    cost,
-    purchaseAmount,
-    reason
-  });
-
-  saveData();
-  renderAll();
-
-  document.getElementById("operationMessage").textContent =
-    "デモ実績を登録しました。";
-
-  document.getElementById("operationPoints").value = "";
-  document.getElementById("purchaseAmount").value = "";
-  document.getElementById("operationReason").value = "";
-  document.getElementById("exchangeQuantity").value = 1;
-};
-
-function renderHistory() {
-  const tbody = document.getElementById("historyTable");
-  tbody.innerHTML = "";
-
-  data.histories.forEach(h => {
-    const typeName = {
-      issue: "ポイント付与",
-      use: "ポイント使用",
-      exchange: "景品交換"
-    }[h.type] || h.type;
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${h.date}</td>
-        <td>${typeName}</td>
-        <td>${pt(h.points)}</td>
-        <td>${yen(h.purchaseAmount || 0)}</td>
-        <td>${h.type === "exchange"
-          ? escapeHtml(h.prizeName) + " × " + h.quantity
-          : "-"}</td>
-        <td>${h.type === "exchange" ? yen(h.cost) : "-"}</td>
-        <td>${escapeHtml(h.reason || "-")}</td>
-      </tr>
-    `;
-  });
-
-  if (data.histories.length === 0) {
-    tbody.innerHTML =
-      `<tr><td colspan="7">まだ履歴がありません。</td></tr>`;
-  }
-}
-
-window.clearHistory = function() {
-  if (!confirm("デモ履歴をすべて削除しますか？")) return;
-
-  data.histories = [];
-  saveData();
-  renderAll();
-};
-
-function renderCosts() {
-  const area = document.getElementById("costSettings");
-  area.innerHTML = "";
-
-  prizes.forEach(p => {
-    area.innerHTML += `
-      <div class="cost-row">
-        <strong>${escapeHtml(p.name)}</strong>
-        <input
-          type="number"
-          min="0"
-          id="cost-${escapeHtml(p.id)}"
-          value="${p.cost}"
-        >
-        <span>円／個</span>
-      </div>
-    `;
-  });
-}
-
-window.saveCosts = function() {
-  for (const p of prizes) {
-    const value = Number(
-      document.getElementById("cost-" + p.id).value
-    );
-
-    if (!Number.isFinite(value) || value < 0) {
-      alert("原価は0円以上で入力してください。");
-      return;
-    }
-
-    p.cost = value;
-  }
-
-  saveData();
-  renderAll();
-
-  document.getElementById("costMessage").textContent =
-    "原価設定を保存しました。";
-};
-
-window.runSimulation = function() {
-  const members = Number(document.getElementById("simMembers").value);
-  const activeRate = Number(document.getElementById("simActiveRate").value);
-  const purchase = Number(document.getElementById("simPurchase").value);
-  const returnRate = Number(document.getElementById("simReturnRate").value);
-  const useRate = Number(document.getElementById("simUseRate").value);
-  const costPerPoint = Number(document.getElementById("simCostPerPoint").value);
-
-  const values = [
-    members, activeRate, purchase,
-    returnRate, useRate, costPerPoint
-  ];
-
-  if (
-    values.some(v => !Number.isFinite(v) || v < 0) ||
-    activeRate > 100 ||
-    returnRate > 100 ||
-    useRate > 100
-  ) {
-    alert("入力内容を確認してください。");
-    return;
-  }
-
-  const activeMembers = members * activeRate / 100;
-  const sales = activeMembers * purchase;
-  const issued = sales * returnRate / 100;
-  const used = issued * useRate / 100;
-  const cost = used * costPerPoint;
-
-  document.getElementById("simActive").textContent =
-    Math.round(activeMembers).toLocaleString() + "人";
-
-  document.getElementById("simSales").textContent = yen(sales);
-  document.getElementById("simIssued").textContent = pt(issued);
-  document.getElementById("simUsed").textContent = pt(used);
-  document.getElementById("simCost").textContent = yen(cost);
-  document.getElementById("simYearCost").textContent = yen(cost * 12);
-};
-
-function renderAll() {
-  renderDashboard();
-  renderMembers();
-  renderHistory();
-  renderCosts();
-  renderPrizeSelect();
-}
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
@@ -1188,6 +687,297 @@ function escapeHtml(value) {
     "'": "&#39;"
   })[c]);
 }
+
+function getTotals() {
+  const history = data.history;
+
+  const issued = history
+    .filter(x => x.type === "issue")
+    .reduce((sum, x) => sum + x.points, 0);
+
+  const used = history
+    .filter(x => x.type === "use" || x.type === "exchange")
+    .reduce((sum, x) => sum + x.points, 0);
+
+  const purchase = history
+    .filter(x => x.type === "issue")
+    .reduce((sum, x) => sum + x.purchase, 0);
+
+  const exchanges = history.filter(x => x.type === "exchange");
+
+  const exchangeCount = exchanges.reduce((sum, x) => sum + x.qty, 0);
+
+  const cost = exchanges.reduce((sum, x) => {
+    const prize = prizes.find(p => p.id === x.prizeId);
+    return sum + (prize ? prize.cost * x.qty : 0);
+  }, 0);
+
+  return { issued, used, purchase, exchangeCount, cost };
+}
+
+function refreshAll() {
+  const t = getTotals();
+
+  document.getElementById("issuedPoints").textContent =
+    number(t.issued) + "pt";
+
+  document.getElementById("usedPoints").textContent =
+    number(t.used) + "pt";
+
+  document.getElementById("exchangeCount").textContent =
+    number(t.exchangeCount) + "回";
+
+  document.getElementById("totalPrizeCost").textContent =
+    yen(t.cost);
+
+  document.getElementById("purchaseTotal").textContent =
+    yen(t.purchase);
+
+  renderDashboardPrizes();
+  renderHistory();
+  renderPrizeSettings();
+  renderPrizeSelect();
+  renderSimulationInputs();
+  calculateSimulation();
+}
+
+function getExchangeQty(prizeId) {
+  return data.history
+    .filter(x => x.type === "exchange" && x.prizeId === prizeId)
+    .reduce((sum, x) => sum + x.qty, 0);
+}
+
+function renderDashboardPrizes() {
+  document.getElementById("dashboardPrizeTable").innerHTML =
+    prizes.map(p => {
+      const qty = getExchangeQty(p.id);
+
+      return `
+        <tr>
+          <td>${escapeHTML(p.name)}</td>
+          <td>${number(qty)}個</td>
+          <td>${yen(p.cost)}</td>
+          <td>${yen(qty * p.cost)}</td>
+        </tr>
+      `;
+    }).join("");
+}
+
+window.addIssue = function() {
+  const purchase = Number(document.getElementById("demoPurchase").value);
+  const points = Number(document.getElementById("demoIssue").value);
+
+  if (purchase <= 0 || points <= 0) {
+    alert("購入金額とポイントを入力してください。");
+    return;
+  }
+
+  data.history.unshift({
+    type: "issue",
+    purchase,
+    points,
+    date: new Date().toISOString()
+  });
+
+  saveData();
+  refreshAll();
+
+  document.getElementById("demoPurchase").value = "";
+  document.getElementById("demoIssue").value = "";
+
+  alert("デモ付与記録を追加しました。");
+};
+
+window.addUse = function() {
+  const points = Number(document.getElementById("demoUse").value);
+
+  if (points <= 0) {
+    alert("利用ポイントを入力してください。");
+    return;
+  }
+
+  data.history.unshift({
+    type: "use",
+    points,
+    date: new Date().toISOString()
+  });
+
+  saveData();
+  refreshAll();
+
+  document.getElementById("demoUse").value = "";
+
+  alert("デモ利用記録を追加しました。");
+};
+
+window.addExchange = function() {
+  const prizeId = document.getElementById("demoPrize").value;
+  const qty = Number(document.getElementById("demoExchangeQty").value);
+  const prize = prizes.find(p => p.id === prizeId);
+
+  if (!prize || qty <= 0) {
+    alert("景品と交換数を確認してください。");
+    return;
+  }
+
+  data.history.unshift({
+    type: "exchange",
+    prizeId,
+    qty,
+    points: prize.points * qty,
+    date: new Date().toISOString()
+  });
+
+  saveData();
+  refreshAll();
+
+  document.getElementById("demoExchangeQty").value = 1;
+
+  alert("景品交換のデモ記録を追加しました。");
+};
+
+function renderPrizeSelect() {
+  document.getElementById("demoPrize").innerHTML =
+    prizes.map(p => `
+      <option value="${p.id}">
+        ${escapeHTML(p.name)}（${number(p.points)}pt）
+      </option>
+    `).join("");
+}
+
+function renderHistory() {
+  document.getElementById("historyTable").innerHTML =
+    data.history.slice(0, 50).map(x => {
+      const date = new Date(x.date).toLocaleString("ja-JP");
+
+      let label = "";
+      let money = "-";
+
+      if (x.type === "issue") {
+        label = "ポイント付与";
+        money = yen(x.purchase);
+      } else if (x.type === "use") {
+        label = "ポイント利用";
+      } else {
+        const prize = prizes.find(p => p.id === x.prizeId);
+        label = "景品交換：" + (prize?.name || "景品");
+        money = yen((prize?.cost || 0) * x.qty);
+      }
+
+      return `
+        <tr>
+          <td>${date}</td>
+          <td>${escapeHTML(label)}</td>
+          <td>${number(x.points)}pt</td>
+          <td>${money}</td>
+        </tr>
+      `;
+    }).join("") || "<tr><td colspan='4'>履歴はありません。</td></tr>";
+}
+
+window.clearDemo = function() {
+  if (!confirm("デモ履歴をすべて削除しますか？")) return;
+
+  data.history = [];
+  saveData();
+  refreshAll();
+
+  alert("デモ履歴を削除しました。");
+};
+
+function renderPrizeSettings() {
+  document.getElementById("prizeSettings").innerHTML =
+    prizes.map(p => `
+      <div class="card" style="background:#f8fafc">
+        <strong>${escapeHTML(p.name)}</strong>
+        <p>${number(p.points)}ポイントで交換</p>
+
+        <label>1個あたりの原価（円）</label>
+        <input
+          type="number"
+          min="0"
+          id="cost_${p.id}"
+          value="${p.cost}">
+      </div>
+    `).join("");
+}
+
+window.savePrizeSettings = function() {
+  prizes.forEach(p => {
+    const input = document.getElementById("cost_" + p.id);
+    const value = Number(input.value);
+
+    if (value < 0 || !Number.isFinite(value)) {
+      alert("原価は0以上の数字を入力してください。");
+      return;
+    }
+
+    p.cost = value;
+  });
+
+  savePrizes();
+  refreshAll();
+
+  alert("景品原価を保存しました。");
+};
+
+function renderSimulationInputs() {
+  document.getElementById("simPrizeInputs").innerHTML =
+    prizes.map(p => `
+      <div class="card" style="background:#f8fafc">
+        <strong>${escapeHTML(p.name)}</strong>
+        <p>原価：${yen(p.cost)} / 必要ポイント：${number(p.points)}pt</p>
+
+        <label>月間想定交換数（個）</label>
+        <input
+          type="number"
+          min="0"
+          value="0"
+          id="simQty_${p.id}"
+          oninput="calculateSimulation()">
+      </div>
+    `).join("");
+}
+
+window.calculateSimulation = function() {
+  const membersCount = Math.max(0, Number(document.getElementById("simMembers").value) || 0);
+  const activeRate = Math.max(0, Number(document.getElementById("simActiveRate").value) || 0) / 100;
+  const avgPurchase = Math.max(0, Number(document.getElementById("simPurchase").value) || 0);
+  const returnRate = Math.max(0, Number(document.getElementById("simReturnRate").value) || 0) / 100;
+
+  const active = membersCount * activeRate;
+  const sales = active * avgPurchase;
+  const issued = sales * returnRate;
+
+  let used = 0;
+  let cost = 0;
+
+  prizes.forEach(p => {
+    const input = document.getElementById("simQty_" + p.id);
+    const qty = Math.max(0, Number(input?.value) || 0);
+
+    used += qty * p.points;
+    cost += qty * p.cost;
+  });
+
+  document.getElementById("simActive").textContent =
+    number(active) + "人";
+
+  document.getElementById("simSales").textContent =
+    yen(sales);
+
+  document.getElementById("simIssued").textContent =
+    number(issued) + "pt";
+
+  document.getElementById("simUsed").textContent =
+    number(used) + "pt";
+
+  document.getElementById("simCost").textContent =
+    yen(cost);
+
+  document.getElementById("simYearCost").textContent =
+    yen(cost * 12);
+};
 
 </script>
 
