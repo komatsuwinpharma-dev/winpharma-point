@@ -28,15 +28,8 @@ header {
   padding: 22px;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 23px;
-}
-
-header p {
-  margin: 6px 0 0;
-  font-size: 13px;
-}
+header h1 { margin: 0; font-size: 23px; }
+header p { margin: 6px 0 0; font-size: 13px; }
 
 .container {
   max-width: 1150px;
@@ -52,15 +45,8 @@ header p {
   box-shadow: 0 2px 9px #0000000a;
 }
 
-h2 {
-  font-size: 19px;
-  margin: 0 0 16px;
-}
-
-h3 {
-  font-size: 15px;
-  margin: 0 0 12px;
-}
+h2 { font-size: 19px; margin: 0 0 16px; }
+h3 { font-size: 15px; margin: 0 0 12px; }
 
 input, select, button {
   font-size: 14px;
@@ -82,35 +68,18 @@ button {
   font-weight: bold;
 }
 
-button:hover {
-  opacity: .88;
-}
-
-button.orange {
-  background: var(--orange);
-}
-
-button.gray {
-  background: #65758a;
-}
-
-button.red {
-  background: #d9534f;
-}
-
-button.small {
-  padding: 7px 10px;
-  font-size: 12px;
-}
+button:hover { opacity: .88; }
+button.orange { background: var(--orange); }
+button.gray { background: #65758a; }
+button.red { background: #d9534f; }
+button.small { padding: 7px 10px; font-size: 12px; }
 
 .login {
   max-width: 420px;
   margin: 60px auto;
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 .nav {
   display: flex;
@@ -153,9 +122,7 @@ button.small {
   box-shadow: 0 2px 9px #00000008;
 }
 
-.metric.orange {
-  border-top-color: var(--orange);
-}
+.metric.orange { border-top-color: var(--orange); }
 
 .metric span {
   font-size: 13px;
@@ -169,17 +136,10 @@ button.small {
   overflow-wrap: anywhere;
 }
 
-.metric small {
-  color: #8993a1;
-}
+.metric small { color: #8993a1; }
 
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
+.section { display: none; }
+.section.active { display: block; }
 
 table {
   width: 100%;
@@ -193,13 +153,9 @@ th, td {
   text-align: left;
 }
 
-th {
-  background: #f6f8fb;
-}
+th { background: #f6f8fb; }
 
-.table-wrap {
-  overflow-x: auto;
-}
+.table-wrap { overflow-x: auto; }
 
 .form-grid {
   display: grid;
@@ -207,9 +163,7 @@ th {
   gap: 12px;
 }
 
-.form-grid button {
-  width: 100%;
-}
+.form-grid button { width: 100%; }
 
 .cost-row {
   display: grid;
@@ -220,36 +174,51 @@ th {
   padding: 12px 0;
 }
 
-.cost-row input {
-  margin: 0;
-}
+.cost-row input { margin: 0; }
 
 .status {
   font-size: 13px;
   margin-top: 10px;
-  color: #1765a8;
+  color: var(--blue);
+}
+
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sim-result {
+  background: #f3f7fc;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 10px;
+}
+
+.sim-result strong {
+  display: block;
+  color: var(--blue);
+  font-size: 23px;
+  margin-top: 5px;
+}
+
+.sim-result span {
+  font-size: 13px;
+  color: #667085;
+}
+
+.help {
+  font-size: 12px;
+  color: #667085;
+  line-height: 1.6;
 }
 
 @media(max-width:700px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .metric strong {
-    font-size: 21px;
-  }
-
-  .container {
-    padding: 12px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .cost-row {
-    grid-template-columns: 1fr 100px;
-  }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .metric strong { font-size: 21px; }
+  .container { padding: 12px; }
+  .form-grid, .sim-grid { grid-template-columns: 1fr; }
+  .cost-row { grid-template-columns: 1fr 100px; }
 }
 </style>
 </head>
@@ -281,7 +250,7 @@ th {
 
   <div class="notice">
     <strong>デモ画面について</strong><br>
-    この画面のポイント実績・交換履歴はデモ用データです。
+    ポイント実績・交換履歴はデモ用データです。
     実際の会員ポイントや景品交換には反映されません。
     会員数のみFirebaseの登録情報を読み込みます。
   </div>
@@ -292,6 +261,7 @@ th {
     <button onclick="showSection('operation',this)">ポイント操作デモ</button>
     <button onclick="showSection('history',this)">操作履歴</button>
     <button onclick="showSection('costs',this)">景品原価設定</button>
+    <button onclick="showSection('simulation',this)">運用シミュレーション</button>
   </div>
 
   <!-- 経営レポート -->
@@ -301,6 +271,7 @@ th {
     <h2>会社全体の実績</h2>
 
     <div class="grid">
+
       <div class="metric">
         <span>登録会員数</span>
         <strong id="memberCount">-</strong>
@@ -336,6 +307,25 @@ th {
         <strong id="totalCost">0 円</strong>
         <small>原価×交換個数</small>
       </div>
+
+      <div class="metric">
+        <span>OTC購入金額</span>
+        <strong id="purchaseTotal">0 円</strong>
+        <small>デモ登録された購入金額</small>
+      </div>
+
+      <div class="metric">
+        <span>ポイント還元率</span>
+        <strong id="returnRate">0.00%</strong>
+        <small>付与ポイント÷購入金額</small>
+      </div>
+
+      <div class="metric orange">
+        <span>景品交換コスト率</span>
+        <strong id="costRate">0.00%</strong>
+        <small>景品コスト÷購入金額</small>
+      </div>
+
     </div>
 
     <div class="card" style="margin-top:18px">
@@ -366,6 +356,7 @@ th {
               <th>付与ポイント</th>
               <th>使用ポイント</th>
               <th>交換回数</th>
+              <th>購入金額</th>
               <th>交換コスト</th>
             </tr>
           </thead>
@@ -404,8 +395,8 @@ th {
     <div class="card">
       <h2>ポイント実績のデモ登録</h2>
 
-      <p style="font-size:13px;color:#667085">
-        会社全体の実績を確認するための仮登録です。
+      <p class="help">
+        デモ用の売上・ポイント実績を登録します。
         実際の会員ポイントには反映されません。
       </p>
 
@@ -419,6 +410,12 @@ th {
       <div id="normalOperation">
         <label>ポイント数</label>
         <input id="operationPoints" type="number" min="1" placeholder="例：10">
+      </div>
+
+      <div id="purchaseOperation">
+        <label>OTC購入金額（円）</label>
+        <input id="purchaseAmount" type="number" min="0" placeholder="例：3000">
+        <p class="help">ポイント付与時に入力すると、還元率・コスト率を集計できます。</p>
       </div>
 
       <div id="exchangeOperation" class="hidden">
@@ -452,6 +449,7 @@ th {
               <th>日時</th>
               <th>内容</th>
               <th>ポイント</th>
+              <th>購入金額</th>
               <th>景品・個数</th>
               <th>コスト</th>
               <th>メモ</th>
@@ -470,7 +468,7 @@ th {
   <section id="costs" class="section">
     <div class="card">
       <h2>景品の原価設定</h2>
-      <p style="font-size:13px;color:#667085">
+      <p class="help">
         1個あたりの原価を設定します。
         交換コストは「原価×交換個数」で自動計算されます。
       </p>
@@ -483,6 +481,95 @@ th {
 
       <p id="costMessage" class="status"></p>
     </div>
+  </section>
+
+  <!-- 運用シミュレーション -->
+
+  <section id="simulation" class="section">
+
+    <div class="card">
+      <h2>WINpharma POINT 運用シミュレーション</h2>
+
+      <p class="help">
+        会員3,000人規模を想定した月間シミュレーションです。
+        実際の実績ではなく、入力した仮定に基づく試算です。
+      </p>
+
+      <div class="sim-grid">
+
+        <div>
+          <label>想定会員数</label>
+          <input id="simMembers" type="number" min="1" value="3000">
+
+          <label>月間利用率（％）</label>
+          <input id="simActiveRate" type="number" min="0" max="100" value="40">
+
+          <label>利用会員1人あたり月間OTC購入額（円）</label>
+          <input id="simPurchase" type="number" min="0" value="3000">
+
+          <label>ポイント還元率（％）</label>
+          <input id="simReturnRate" type="number" min="0" max="100" step="0.1" value="1">
+
+          <label>付与ポイントの月間使用率（％）</label>
+          <input id="simUseRate" type="number" min="0" max="100" value="30">
+
+          <label>使用1ポイントあたり景品原価（円）</label>
+          <input id="simCostPerPoint" type="number" min="0" step="0.1" value="3">
+
+          <button class="orange" onclick="runSimulation()" style="width:100%">
+            シミュレーション実行
+          </button>
+        </div>
+
+        <div>
+          <h3>月間試算結果</h3>
+
+          <div class="sim-result">
+            <span>月間利用会員数</span>
+            <strong id="simActive">0人</strong>
+          </div>
+
+          <div class="sim-result">
+            <span>月間OTC購入金額</span>
+            <strong id="simSales">0円</strong>
+          </div>
+
+          <div class="sim-result">
+            <span>月間付与ポイント</span>
+            <strong id="simIssued">0 pt</strong>
+          </div>
+
+          <div class="sim-result">
+            <span>月間使用ポイント</span>
+            <strong id="simUsed">0 pt</strong>
+          </div>
+
+          <div class="sim-result">
+            <span>月間景品交換コスト</span>
+            <strong id="simCost">0円</strong>
+          </div>
+
+          <div class="sim-result">
+            <span>年間景品交換コスト（単純換算）</span>
+            <strong id="simYearCost">0円</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>試算条件について</strong><br>
+      初期値は仮の数字です。<br>
+      ・会員数：3,000人<br>
+      ・月間利用率：40％<br>
+      ・利用会員1人あたり月間購入額：3,000円<br>
+      ・ポイント還元率：1％<br>
+      ・月間使用率：30％<br>
+      ・使用1ポイントあたり景品原価：3円<br><br>
+      実際の景品構成・交換率・購入実績に応じて調整してください。
+    </div>
+
   </section>
 
 </div>
@@ -547,13 +634,14 @@ const defaultPrizes = [
 ];
 
 let members = [];
-let prizes = [...defaultPrizes];
 
 let data = loadData();
+let prizes = data.prizes;
 
 function loadData() {
   try {
     const saved = JSON.parse(localStorage.getItem(DATA_KEY));
+
     if (saved && Array.isArray(saved.histories)) {
       return {
         histories: saved.histories,
@@ -569,8 +657,6 @@ function loadData() {
     prizes: [...defaultPrizes]
   };
 }
-
-prizes = data.prizes;
 
 function saveData() {
   data.prizes = prizes;
@@ -617,6 +703,7 @@ onAuthStateChanged(auth, async user => {
 
     await loadMembers();
     renderAll();
+    runSimulation();
 
   } catch (e) {
     document.getElementById("loginMessage").textContent =
@@ -673,6 +760,7 @@ function getStats() {
   let used = 0;
   let exchanges = 0;
   let totalCost = 0;
+  let purchaseTotal = 0;
 
   const prizeStats = {};
 
@@ -685,6 +773,8 @@ function getStats() {
   });
 
   data.histories.forEach(h => {
+    purchaseTotal += Number(h.purchaseAmount || 0);
+
     if (h.type === "issue") {
       issued += h.points || 0;
     }
@@ -717,6 +807,7 @@ function getStats() {
     balance: issued - used,
     exchanges,
     totalCost,
+    purchaseTotal,
     prizeStats
   };
 }
@@ -727,9 +818,26 @@ function renderDashboard() {
   document.getElementById("issuedTotal").textContent = pt(s.issued);
   document.getElementById("usedTotal").textContent = pt(s.used);
   document.getElementById("balanceTotal").textContent = pt(s.balance);
+
   document.getElementById("exchangeCount").textContent =
     s.exchanges.toLocaleString() + " 回";
+
   document.getElementById("totalCost").textContent = yen(s.totalCost);
+  document.getElementById("purchaseTotal").textContent = yen(s.purchaseTotal);
+
+  const returnRate = s.purchaseTotal > 0
+    ? s.issued / s.purchaseTotal * 100
+    : 0;
+
+  const costRate = s.purchaseTotal > 0
+    ? s.totalCost / s.purchaseTotal * 100
+    : 0;
+
+  document.getElementById("returnRate").textContent =
+    returnRate.toFixed(2) + "%";
+
+  document.getElementById("costRate").textContent =
+    costRate.toFixed(2) + "%";
 
   const prizeBody = document.getElementById("prizeSummary");
   prizeBody.innerHTML = "";
@@ -756,7 +864,6 @@ function renderDashboard() {
 
   data.histories.forEach(h => {
     const month = (h.date || "").slice(0, 7);
-
     if (!month) return;
 
     if (!monthly[month]) {
@@ -764,9 +871,12 @@ function renderDashboard() {
         issued: 0,
         used: 0,
         exchanges: 0,
-        cost: 0
+        cost: 0,
+        purchase: 0
       };
     }
+
+    monthly[month].purchase += Number(h.purchaseAmount || 0);
 
     if (h.type === "issue") {
       monthly[month].issued += h.points || 0;
@@ -794,6 +904,7 @@ function renderDashboard() {
         <td>${pt(m.issued)}</td>
         <td>${pt(m.used)}</td>
         <td>${m.exchanges} 回</td>
+        <td>${yen(m.purchase)}</td>
         <td>${yen(m.cost)}</td>
       </tr>
     `;
@@ -801,7 +912,7 @@ function renderDashboard() {
 
   if (Object.keys(monthly).length === 0) {
     monthlyBody.innerHTML =
-      `<tr><td colspan="5">まだデモ実績がありません。</td></tr>`;
+      `<tr><td colspan="6">まだデモ実績がありません。</td></tr>`;
   }
 }
 
@@ -845,6 +956,9 @@ window.updateOperationForm = function() {
 
   document.getElementById("exchangeOperation")
     .classList.toggle("hidden", type !== "exchange");
+
+  document.getElementById("purchaseOperation")
+    .classList.toggle("hidden", type !== "issue");
 };
 
 function renderPrizeSelect() {
@@ -866,6 +980,7 @@ window.addOperation = function() {
   let prizeName = "";
   let quantity = 0;
   let cost = 0;
+  let purchaseAmount = 0;
 
   if (type === "exchange") {
     prizeId = document.getElementById("exchangePrize").value;
@@ -889,6 +1004,17 @@ window.addOperation = function() {
       alert("ポイント数を正しく入力してください。");
       return;
     }
+
+    if (type === "issue") {
+      purchaseAmount = Number(
+        document.getElementById("purchaseAmount").value
+      );
+
+      if (!Number.isFinite(purchaseAmount) || purchaseAmount < 0) {
+        alert("購入金額を正しく入力してください。");
+        return;
+      }
+    }
   }
 
   if (type === "use" || type === "exchange") {
@@ -909,6 +1035,7 @@ window.addOperation = function() {
     prizeName,
     quantity,
     cost,
+    purchaseAmount,
     reason
   });
 
@@ -919,6 +1046,7 @@ window.addOperation = function() {
     "デモ実績を登録しました。";
 
   document.getElementById("operationPoints").value = "";
+  document.getElementById("purchaseAmount").value = "";
   document.getElementById("operationReason").value = "";
   document.getElementById("exchangeQuantity").value = 1;
 };
@@ -939,6 +1067,7 @@ function renderHistory() {
         <td>${h.date}</td>
         <td>${typeName}</td>
         <td>${pt(h.points)}</td>
+        <td>${yen(h.purchaseAmount || 0)}</td>
         <td>${h.type === "exchange"
           ? escapeHtml(h.prizeName) + " × " + h.quantity
           : "-"}</td>
@@ -950,7 +1079,7 @@ function renderHistory() {
 
   if (data.histories.length === 0) {
     tbody.innerHTML =
-      `<tr><td colspan="6">まだ履歴がありません。</td></tr>`;
+      `<tr><td colspan="7">まだ履歴がありません。</td></tr>`;
   }
 }
 
@@ -1001,6 +1130,45 @@ window.saveCosts = function() {
 
   document.getElementById("costMessage").textContent =
     "原価設定を保存しました。";
+};
+
+window.runSimulation = function() {
+  const members = Number(document.getElementById("simMembers").value);
+  const activeRate = Number(document.getElementById("simActiveRate").value);
+  const purchase = Number(document.getElementById("simPurchase").value);
+  const returnRate = Number(document.getElementById("simReturnRate").value);
+  const useRate = Number(document.getElementById("simUseRate").value);
+  const costPerPoint = Number(document.getElementById("simCostPerPoint").value);
+
+  const values = [
+    members, activeRate, purchase,
+    returnRate, useRate, costPerPoint
+  ];
+
+  if (
+    values.some(v => !Number.isFinite(v) || v < 0) ||
+    activeRate > 100 ||
+    returnRate > 100 ||
+    useRate > 100
+  ) {
+    alert("入力内容を確認してください。");
+    return;
+  }
+
+  const activeMembers = members * activeRate / 100;
+  const sales = activeMembers * purchase;
+  const issued = sales * returnRate / 100;
+  const used = issued * useRate / 100;
+  const cost = used * costPerPoint;
+
+  document.getElementById("simActive").textContent =
+    Math.round(activeMembers).toLocaleString() + "人";
+
+  document.getElementById("simSales").textContent = yen(sales);
+  document.getElementById("simIssued").textContent = pt(issued);
+  document.getElementById("simUsed").textContent = pt(used);
+  document.getElementById("simCost").textContent = yen(cost);
+  document.getElementById("simYearCost").textContent = yen(cost * 12);
 };
 
 function renderAll() {
