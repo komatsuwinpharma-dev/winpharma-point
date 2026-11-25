@@ -253,6 +253,7 @@ footer {
     <button onclick="showTab('members',this)">会員管理</button>
     <button onclick="showTab('operations',this)">デモ操作</button>
     <button onclick="showTab('prizes',this)">景品管理</button>
+    <button onclick="showTab('stores',this)">店舗管理</button>
     <button onclick="showTab('simulation',this)">運用シミュレーション</button>
   </div>
 
@@ -350,6 +351,36 @@ footer {
       </div>
     </div>
 
+  </section>
+
+  <!-- 店舗管理 -->
+  <section id="stores" class="tab-content">
+    <div class="card">
+      <h2>店舗の追加・変更</h2>
+      <p>ここで登録した営業中の店舗が、お客様の新規登録画面に表示されます。</p>
+      <input type="hidden" id="storeEditId">
+      <label>都道府県</label>
+      <select id="storePrefecture">
+        <option value="">都道府県を選択</option>
+        <option>神奈川県</option><option>群馬県</option><option>千葉県</option>
+        <option>東京都</option><option>栃木県</option><option>福島県</option><option>茨城県</option>
+      </select>
+      <label>店舗名</label>
+      <input id="storeName" placeholder="例：ウイン薬局 横浜店">
+      <button onclick="saveStore()">店舗を保存</button>
+      <button class="gray" onclick="resetStoreForm()">入力をクリア</button>
+      <p id="storeStatus"></p>
+    </div>
+    <div class="card">
+      <h2>登録店舗一覧</h2>
+      <p class="notice">休止にすると新規登録画面には表示されません。既存会員のお気に入り店舗情報は保持されます。</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>都道府県</th><th>店舗名</th><th>状態</th><th>操作</th></tr></thead>
+          <tbody id="storeTable"></tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
   <!-- デモ操作 -->
@@ -491,7 +522,11 @@ import {
   doc,
   getDoc,
   collection,
-  getDocs
+  getDocs,
+  addDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -611,6 +646,7 @@ onAuthStateChanged(auth, async user => {
     document.getElementById("adminEmail").textContent = user.email || "";
 
     await loadMembers();
+    await loadStores(true);
     refreshAll();
 
   } catch (error) {
@@ -687,6 +723,90 @@ function escapeHTML(value) {
     "'": "&#39;"
   })[c]);
 }
+
+let stores=[];
+const initialStores = [
+["神奈川県","ウイン薬局 鶴見潮田店"],["神奈川県","ウイン薬局 京急鶴見店"],["神奈川県","ウイン薬局 日吉６丁目店"],["神奈川県","ウイン薬局秦野北店"],["神奈川県","ウイン薬局鶴見中央店"],["神奈川県","ウイン薬局横浜青葉台駅前店"],["神奈川県","ウイン薬局小田急相模原店"],["神奈川県","ウイン薬局 開成店"],["神奈川県","ウイン調剤薬局 日吉5丁目店"],["神奈川県","ウイン調剤薬局 北寺尾店"],["神奈川県","ウイン調剤薬局 東寺尾店"],["神奈川県","ウイン調剤薬局 上末吉店"],["神奈川県","ウイン調剤薬局 横浜西口店"],["神奈川県","ウイン調剤 幸薬局"],["神奈川県","ウイン調剤薬局 反町店"],["神奈川県","ウイン調剤薬局 白楽店"],["神奈川県","ウイン薬局 日吉箕輪町店"],["神奈川県","ウイン調剤薬局 衣笠店"],["神奈川県","ウイン薬局 丹沢店"],["神奈川県","ウイン薬局 まつばら店"],
+["群馬県","ウイン調剤薬局 高崎店"],["群馬県","ウイン調剤薬局 前橋日赤前店"],["群馬県","ウイン調剤薬局 下大島店"],["群馬県","ウイン調剤薬局 伊勢崎店"],["群馬県","ウイン調剤薬局 中之条店"],["群馬県","ウイン薬局 みどり大間々店"],["群馬県","ウイン薬局 前橋駒形店"],["群馬県","ウイン調剤薬局 ひろせ店"],["群馬県","オハナ薬局大泉店"],["群馬県","オハナ薬局松井田店"],["群馬県","オハナ薬局若葉町店"],["群馬県","オハナ薬局人見店"],["群馬県","オハナ薬局前橋朝日店"],["群馬県","オハナ薬局前橋川原町店"],["群馬県","未来薬局上泉店"],["群馬県","未来薬局藤岡店"],["群馬県","ウイン調剤薬局松井田店"],["群馬県","ウイン薬局高崎昭和町店"],
+["千葉県","ウイン薬局西船橋店"],["千葉県","ウイン薬局千葉八幡店"],["千葉県","ウイン薬局 松戸八柱店"],["千葉県","オハナ薬局 千葉西店"],
+["東京都","ウイン薬局 江戸川瑞江店"],["東京都","ウイン薬局 渋谷初台店"],["東京都","ウイン薬局有明店"],["東京都","ウイン調剤薬局 秋川店"],["東京都","ウイン調剤 こぐま薬局 岸店"],
+["栃木県","ウイン調剤薬局那須店"],["栃木県","ウイン調剤城内町薬局"],["栃木県","ウイン調剤薬局小山店"],["栃木県","ウイン調剤薬局小山城南店"],["栃木県","オハナ薬局佐野店"],["栃木県","ウイン薬局宇都宮平出店"],
+["福島県","ウイン調剤薬局湯本店"],["福島県","ウイン調剤薬局植田店"],["福島県","ウイン調剤薬局天栄店"],["福島県","ウイン調剤みなみ通り薬局"],["福島県","ハーモニー薬局あさか店"],["福島県","ウイン調剤薬局白河店"],["福島県","ウイン調剤薬局保原店"],["福島県","ウイン調剤薬局南相馬店"],["福島県","ウイン調剤薬局 西郷店"],
+["茨城県","オハナ薬局古河店"]
+];
+
+async function loadStores(seedIfMissing=false){
+  let snap=await getDocs(collection(db,"stores"));
+  stores=snap.docs.map(d=>({id:d.id,...d.data()}));
+
+  // 初期店舗は、空のときだけでなく一部だけ登録済みの場合も不足分を補う。
+  // 店舗名・都道府県が同じものは重複登録しない。
+  if(seedIfMissing){
+    const keyOf=(pref,name)=>String(pref||"").replace(/\s/g,"")+"__"+String(name||"").replace(/\s/g,"");
+    const existing=new Set(stores.map(s=>keyOf(s.prefecture,s.name)));
+    const missing=initialStores.filter(([pref,name])=>!existing.has(keyOf(pref,name)));
+    for(const [prefecture,name] of missing){
+      await addDoc(collection(db,"stores"),{prefecture,name,active:true,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+    }
+    if(missing.length){
+      snap=await getDocs(collection(db,"stores"));
+      stores=snap.docs.map(d=>({id:d.id,...d.data()}));
+    }
+  }
+
+  stores.sort((a,b)=>String(a.prefecture).localeCompare(String(b.prefecture),"ja")||String(a.name).localeCompare(String(b.name),"ja"));
+  renderStores();
+}
+
+function renderStores(){
+  const tbody=document.getElementById("storeTable");
+  if(!tbody)return;
+  tbody.innerHTML=stores.map(s=>`<tr>
+    <td>${escapeHTML(s.prefecture||"")}</td><td>${escapeHTML(s.name||"")}</td>
+    <td>${s.active===false?"休止中":"営業中"}</td>
+    <td><button onclick="editStore('${s.id}')">編集</button>
+    <button class="${s.active===false?"orange":"red"}" onclick="toggleStore('${s.id}')">${s.active===false?"再開":"休止"}</button></td>
+  </tr>`).join("")||"<tr><td colspan='4'>店舗はまだ登録されていません。</td></tr>";
+}
+
+window.resetStoreForm=function(){
+  document.getElementById("storeEditId").value="";
+  document.getElementById("storePrefecture").value="";
+  document.getElementById("storeName").value="";
+  document.getElementById("storeStatus").textContent="新しい店舗を登録できます。";
+};
+
+window.editStore=function(id){
+  const s=stores.find(x=>x.id===id); if(!s)return;
+  document.getElementById("storeEditId").value=id;
+  document.getElementById("storePrefecture").value=s.prefecture||"";
+  document.getElementById("storeName").value=s.name||"";
+  document.getElementById("storeStatus").textContent="編集内容を入力して「店舗を保存」を押してください。";
+  window.scrollTo(0,0);
+};
+
+window.saveStore=async function(){
+  const id=document.getElementById("storeEditId").value;
+  const prefecture=document.getElementById("storePrefecture").value;
+  const name=document.getElementById("storeName").value.trim();
+  const status=document.getElementById("storeStatus");
+  if(!prefecture||!name){alert("都道府県と店舗名を入力してください。");return;}
+  try{
+    const payload={prefecture,name,updatedAt:serverTimestamp()};
+    if(id) await updateDoc(doc(db,"stores",id),payload);
+    else await addDoc(collection(db,"stores"),{...payload,active:true,createdAt:serverTimestamp()});
+    await loadStores(false); resetStoreForm();
+    status.textContent="店舗情報を保存しました。";
+  }catch(e){status.textContent="保存できませんでした："+e.message;}
+};
+
+window.toggleStore=async function(id){
+  const s=stores.find(x=>x.id===id); if(!s)return;
+  const active=s.active===false;
+  if(!confirm(active?"この店舗を営業中に戻しますか？":"この店舗を休止しますか？\n既存会員のお気に入り店舗情報は残ります。"))return;
+  try{await updateDoc(doc(db,"stores",id),{active,updatedAt:serverTimestamp()});await loadStores(false);}
+  catch(e){alert("店舗状態を変更できませんでした："+e.message);}
+};
 
 function getTotals() {
   const history = data.history;
