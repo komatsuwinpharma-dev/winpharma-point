@@ -330,7 +330,7 @@ footer {
       <h2>会員一覧</h2>
 
       <input id="memberSearch"
-        placeholder="会員UIDで検索"
+        placeholder="会員番号・ニックネーム・お気に入り店舗・UIDで検索"
         oninput="renderMembers()">
 
       <button onclick="loadMembers()">会員情報を再読み込み</button>
@@ -341,12 +341,36 @@ footer {
         <table>
           <thead>
             <tr>
-              <th>会員UID</th>
-              <th>ポイント</th>
+              <th>会員番号</th>
+              <th>ニックネーム</th>
+              <th>お気に入り店舗</th>
+              <th>保有ポイント</th>
               <th>登録日時</th>
+              <th>会員UID</th>
             </tr>
           </thead>
           <tbody id="memberTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>お気に入り店舗別 ポイント集計</h2>
+      <p class="notice">
+        各店舗をお気に入りに登録している会員の「現在の保有ポイント」を合計しています。
+        過去に獲得した累計ポイントや、実際に購入した店舗別の付与ポイントではありません。
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>都道府県</th>
+              <th>お気に入り店舗</th>
+              <th>会員数</th>
+              <th>保有ポイント合計</th>
+            </tr>
+          </thead>
+          <tbody id="storePointSummary"></tbody>
         </table>
       </div>
     </div>
@@ -692,11 +716,18 @@ window.loadMembers = async function() {
 };
 
 window.renderMembers = function() {
-  const keyword = document.getElementById("memberSearch").value.toLowerCase();
+  const keyword = document.getElementById("memberSearch").value.trim().toLowerCase();
 
-  const filtered = members.filter(member =>
-    member.id.toLowerCase().includes(keyword)
-  );
+  const filtered = members.filter(member => {
+    const searchable = [
+      member.memberNo,
+      member.nickname,
+      member.favoriteStoreName,
+      member.favoritePrefecture,
+      member.id
+    ].map(value => String(value || "").toLowerCase()).join(" ");
+    return searchable.includes(keyword);
+  });
 
   document.getElementById("memberTable").innerHTML =
     filtered.map(member => {
@@ -706,12 +737,42 @@ window.renderMembers = function() {
 
       return `
         <tr>
-          <td>${escapeHTML(member.id)}</td>
+          <td>${escapeHTML(member.memberNo || "未発行")}</td>
+          <td>${escapeHTML(member.nickname || "未設定")}</td>
+          <td>${escapeHTML(member.favoriteStoreName || "未選択")}</td>
           <td>${number(member.points || 0)}pt</td>
           <td>${date}</td>
+          <td style="font-size:11px;word-break:break-all">${escapeHTML(member.id)}</td>
         </tr>
       `;
-    }).join("") || "<tr><td colspan='3'>該当する会員はいません。</td></tr>";
+    }).join("") || "<tr><td colspan='6'>該当する会員はいません。</td></tr>";
+
+  // お気に入り店舗ごとに、所属会員数と現在保有ポイントを集計
+  const summary = new Map();
+  members.forEach(member => {
+    const storeName = String(member.favoriteStoreName || "お気に入り店舗未設定");
+    const prefecture = String(member.favoritePrefecture || "");
+    const key = prefecture + "__" + storeName;
+    if (!summary.has(key)) {
+      summary.set(key, { prefecture, storeName, memberCount: 0, points: 0 });
+    }
+    const row = summary.get(key);
+    row.memberCount += 1;
+    row.points += Number(member.points || 0);
+  });
+
+  const rows = Array.from(summary.values()).sort((a, b) =>
+    b.points - a.points || a.prefecture.localeCompare(b.prefecture, "ja") || a.storeName.localeCompare(b.storeName, "ja")
+  );
+
+  document.getElementById("storePointSummary").innerHTML = rows.map(row => `
+    <tr>
+      <td>${escapeHTML(row.prefecture || "-")}</td>
+      <td>${escapeHTML(row.storeName)}</td>
+      <td>${number(row.memberCount)}人</td>
+      <td><strong>${number(row.points)}pt</strong></td>
+    </tr>
+  `).join("") || "<tr><td colspan='4'>集計できる会員はいません。</td></tr>";
 };
 
 function escapeHTML(value) {
