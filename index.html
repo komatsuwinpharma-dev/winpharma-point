@@ -648,25 +648,67 @@ window.register=async()=>{
   const storeId=document.getElementById("registerStore").value;
   const store=storeCache.find(s=>s.id===storeId);
   const button=document.getElementById("registerButton");
+
   if(!nickname){alert("ニックネームを入力してください。");return;}
   if(nickname.length>20){alert("ニックネームは20文字以内で入力してください。");return;}
   if(!store){alert("お気に入り店舗を選択してください。");return;}
-  button.disabled=true; button.textContent="登録しています...";
+
+  button.disabled=true;
+  button.textContent="登録しています...";
+
   try{
-    const credential=await signInAnonymously(auth);
-    const u=credential.user;
-    const memberNo="WF-"+crypto.randomUUID().replace(/-/g,"").slice(0,10).toUpperCase();
-    await setDoc(doc(db,"members",u.uid),{
-      uid:u.uid, memberNo, nickname, favoriteStoreId:store.id,
-      favoriteStoreName:store.name, favoritePrefecture:store.prefecture,
-      points:0, createdAt:serverTimestamp(), authType:"anonymous"
-    });
-    alert("会員登録が完了しました！");
+    // すでに匿名ログイン済みなら同じUIDを使い、未ログインの場合だけ匿名認証する
+    const u=auth.currentUser || (await signInAnonymously(auth)).user;
+    const memberRef=doc(db,"members",u.uid);
+
+    // 既存データを確認し、会員番号とポイント・作成日時を維持する
+    const oldSnap=await getDoc(memberRef);
+    const oldData=oldSnap.exists()?oldSnap.data():{};
+    const memberNo=oldData.memberNo ||
+      ("WF-"+crypto.randomUUID().replace(/-/g,"").slice(0,10).toUpperCase());
+
+    const memberProfile={
+      uid:u.uid,
+      memberNo,
+      nickname,
+      favoriteStoreId:store.id,
+      favoriteStoreName:store.name,
+      favoritePrefecture:store.prefecture,
+      authType:"anonymous"
+    };
+
+    if(oldSnap.exists()){
+      // 既存ドキュメントのpoints・createdAtを消さずにプロフィールだけ更新
+      await setDoc(memberRef,memberProfile,{merge:true});
+    }else{
+      await setDoc(memberRef,{
+        ...memberProfile,
+        points:0,
+        createdAt:serverTimestamp()
+      });
+    }
+
+    const savedSnap=await getDoc(memberRef);
+    if(!savedSnap.exists() || !savedSnap.data().nickname){
+      throw new Error("会員情報の保存を確認できませんでした。Firestoreのmembersルールを確認してください。");
+    }
+
+    memberData=savedSnap.data();
+    currentUser=u;
+    document.getElementById("memberNumber").textContent=memberData.memberNo;
+    document.getElementById("memberNumber2").textContent=memberData.memberNo;
+    document.getElementById("memberNickname").textContent=memberData.nickname;
+    document.getElementById("memberFavoriteStore").textContent=memberData.favoriteStoreName;
+    document.getElementById("bottomNav").classList.remove("hidden");
+    showPage("homeScreen");
+    updateBalance();
+    alert("会員情報を保存しました！");
   }catch(e){
-    console.error(e);
-    alert("登録できませんでした："+e.message+"\nFirebaseで匿名認証が有効か確認してください。");
+    console.error("会員登録エラー",e);
+    alert("登録できませんでした："+e.message);
   }finally{
-    button.disabled=false; button.textContent="無料で会員登録";
+    button.disabled=false;
+    button.textContent="無料で会員登録";
   }
 };
 
