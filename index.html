@@ -270,6 +270,31 @@ color:var(--navy);
 background:#f0f3f9;
 border-radius:10px
 }
+
+/* お気に入り店舗選択 */
+.picker-block{margin:18px 0 20px}
+.picker-step{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:var(--navy);font-weight:850;font-size:14px}
+.picker-step b{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:var(--orange);color:#fff;font-size:12px}
+.prefecture-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.prefecture-choice{width:100%;margin:0;padding:13px 10px;background:#f4f7fb;color:var(--navy);border:1px solid #e0e7f1;border-radius:13px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:62px}
+.prefecture-choice strong{font-size:14px;display:block}
+.prefecture-choice small{display:block;color:var(--muted);font-size:10px;margin-top:3px;font-weight:600}
+.prefecture-choice .arrow{font-size:19px;color:#9aa6b8}
+.prefecture-choice.active{background:#eaf2fc;border:2px solid var(--blue);padding:12px 9px;box-shadow:0 4px 12px #1765a81a}
+.prefecture-choice:disabled{opacity:.55;cursor:not-allowed}
+.store-choice-list{display:grid;gap:8px}
+.store-choice{width:100%;margin:0;padding:14px;background:#fff;color:var(--ink);border:1px solid #e4eaf2;border-radius:13px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.store-choice strong{font-size:13px;line-height:1.5}
+.store-choice .store-mark{width:31px;height:31px;flex:0 0 31px;border-radius:10px;background:#fff2e4;color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:16px}
+.store-choice .store-check{color:#a0a8b6;font-size:17px}
+.store-choice.selected{border:2px solid var(--orange);padding:13px;background:#fffaf4}
+.store-choice.selected .store-check{color:#e77b19;font-weight:900}
+.selected-store-summary{margin-top:12px;padding:12px 13px;background:#f1f6fc;border-radius:12px;color:var(--navy);font-size:12px;line-height:1.6}
+.picker-message{padding:11px 12px;border-radius:11px;background:#f6f8fb;color:#64748b;font-size:12px;line-height:1.65}
+.picker-message.error{background:#fff2ef;color:#a33d2e}
+.picker-retry{margin-top:8px;background:#eff2f7;color:#47536a;padding:10px}
+@media(max-width:360px){.prefecture-grid{grid-template-columns:1fr}.prefecture-choice{min-height:54px}}
+
 footer{text-align:center;color:#a0a8b6;font-size:10px;padding:14px}
 </style>
 </head>
@@ -287,24 +312,33 @@ footer{text-align:center;color:#a0a8b6;font-size:10px;padding:14px}
 <h1>WINpharma POINT</h1>
 <p>人と人とのつながりを愛します</p>
 </div>
-
 <div class="card">
-<p class="eyebrow">WELCOME BACK</p>
-<h2>ログイン</h2>
-<input id="loginEmail" type="email" placeholder="メールアドレス">
-<input id="loginPassword" type="password" placeholder="パスワード">
-<button class="primary" onclick="login()">ログイン</button>
+<p class="eyebrow">WELCOME</p>
+<h2>新規会員登録</h2>
+<p class="muted">ニックネームとお気に入り店舗を選ぶだけで登録できます。</p>
+<label for="registerNickname">ニックネーム</label>
+<input id="registerNickname" maxlength="20" placeholder="例：ウイン太郎">
+<div class="picker-block">
+  <p class="picker-step"><b>1</b> 都道府県を選択</p>
+  <div id="prefectureButtons" class="prefecture-grid">
+    <div class="picker-message">店舗情報を読み込んでいます...</div>
+  </div>
 </div>
-
-<div class="card">
-<p class="eyebrow">JOIN US</p>
-<h2>はじめてご利用の方</h2>
-<p class="muted">新規会員登録はこちらから。</p>
-<input id="registerEmail" type="email" placeholder="メールアドレス">
-<input id="registerPassword" type="password" placeholder="パスワード（6文字以上）">
-<button class="orange" onclick="register()">無料で会員登録</button>
+<div class="picker-block">
+  <p class="picker-step"><b>2</b> お気に入り店舗を選択</p>
+  <div id="storeChoices" class="store-choice-list">
+    <div class="picker-message">先に都道府県を選択してください。</div>
+  </div>
+  <div id="selectedStoreSummary" class="selected-store-summary">選択中の店舗：まだ選択されていません</div>
 </div>
-<p id="authMessage"></p>
+<input type="hidden" id="registerPrefecture">
+<input type="hidden" id="registerStore">
+<div id="storeLoadStatus" class="picker-message">店舗情報を確認しています...</div>
+<button type="button" class="picker-retry" onclick="reloadStoreMaster()">店舗一覧を再読み込み</button>
+<button class="orange" id="registerButton" onclick="register()">無料で会員登録</button>
+<p class="small">※メールアドレス・電話番号・住所の入力は不要です。引き継ぎ設定は後から任意で行える仕様にします。</p>
+</div>
+<p id="authMessage" class="muted"></p>
 </section>
 
 <section id="homeScreen" class="hidden">
@@ -442,11 +476,14 @@ footer{text-align:center;color:#a0a8b6;font-size:10px;padding:14px}
 <p class="eyebrow">MY ACCOUNT</p>
 <h1 class="title">会員情報</h1>
 <div class="card">
-<p class="muted">メールアドレス</p>
-<strong id="memberEmail"></strong>
+<p class="muted">ニックネーム</p>
+<strong id="memberNickname"></strong>
+<p class="muted" style="margin-top:22px">お気に入り店舗</p>
+<strong id="memberFavoriteStore"></strong>
 <p class="muted" style="margin-top:22px">会員番号</p>
 <strong id="memberNumber2"></strong>
-<button class="sub" onclick="logout()">ログアウト</button>
+<div class="notice">お気に入り店舗の変更が必要な場合は、店舗スタッフまたは本部へお問い合わせください。</div>
+<button class="sub" onclick="logout()">この端末からログアウト</button>
 <button class="primary" onclick="showPage('homeScreen')">戻る</button>
 </div>
 </section>
@@ -466,8 +503,8 @@ footer{text-align:center;color:#a0a8b6;font-size:10px;padding:14px}
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,doc,getDoc,setDoc,serverTimestamp,collection,getDocs}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{getAuth,signInAnonymously,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,serverTimestamp,collection,getDocs,query,where,orderBy}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyDgPnM7g-lHMQ1_KqL-GVuMhJFWuOrXBLg",
@@ -508,37 +545,137 @@ function saveDemoData(d){
 localStorage.setItem("demo_"+currentUser.uid,JSON.stringify(d));
 }
 
+let storeCache=[];
+let memberData=null;
+let selectedPrefecture="";
+let selectedStoreId="";
+const prefectureOrder=["神奈川県","群馬県","千葉県","東京都","栃木県","福島県","茨城県"];
+
+async function loadStoreMaster(){
+  const status=document.getElementById("storeLoadStatus");
+  status.className="picker-message";
+  status.textContent="店舗情報を読み込んでいます...";
+  try{
+    // 新規登録前でも店舗一覧を表示できるよう、公開店舗マスターを読み取る
+    const snap=await getDocs(collection(db,"stores"));
+    storeCache=snap.docs
+      .map(d=>({id:d.id,...d.data()}))
+      .filter(s=>s.active!==false)
+      .sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ja"));
+    renderPrefectureButtons();
+    status.className="picker-message";
+    status.textContent=storeCache.length
+      ? `店舗情報を読み込みました（${storeCache.length}店舗）。都道府県を選んでください。`
+      : "店舗情報はまだ登録されていません。本部管理画面で店舗を登録してください。";
+  }catch(e){
+    console.error("店舗マスター読込エラー",e);
+    storeCache=[];
+    renderPrefectureButtons();
+    status.className="picker-message error";
+    status.textContent="店舗情報を読み込めませんでした。Firestoreの読み取り権限または通信状況を確認してください。";
+    const detail=document.getElementById("storeLoadDetail");
+    if(detail) detail.textContent=e.message;
+  }
+}
+
+function renderPrefectureButtons(){
+  const fromStores=storeCache.map(s=>s.prefecture).filter(Boolean);
+  const prefectures=[...new Set([...prefectureOrder,...fromStores])];
+  const el=document.getElementById("prefectureButtons");
+  if(!el)return;
+  el.innerHTML=prefectures.map(pref=>{
+    const count=storeCache.filter(s=>s.prefecture===pref).length;
+    const active=selectedPrefecture===pref;
+    return `<button type="button" class="prefecture-choice ${active?"active":""}" ${count?`onclick="selectPrefecture('${escapeHTML(pref)}')"`:"disabled"}>
+      <span><strong>${escapeHTML(pref)}</strong><small>${count?`${count}店舗` : "店舗情報なし"}</small></span>
+      <span class="arrow">${active?"✓":"›"}</span>
+    </button>`;
+  }).join("");
+}
+
+window.selectPrefecture=(pref)=>{
+  selectedPrefecture=pref;
+  selectedStoreId="";
+  document.getElementById("registerPrefecture").value=pref;
+  document.getElementById("registerStore").value="";
+  document.getElementById("selectedStoreSummary").textContent="選択中の店舗：まだ選択されていません";
+  renderPrefectureButtons();
+  renderStoreChoices();
+};
+
+function renderStoreChoices(){
+  const el=document.getElementById("storeChoices");
+  if(!selectedPrefecture){
+    el.innerHTML='<div class="picker-message">先に都道府県を選択してください。</div>';
+    return;
+  }
+  const rows=storeCache.filter(s=>s.prefecture===selectedPrefecture);
+  if(!rows.length){
+    el.innerHTML='<div class="picker-message">この都道府県には現在選択できる店舗がありません。</div>';
+    return;
+  }
+  el.innerHTML=rows.map(s=>{
+    const chosen=selectedStoreId===s.id;
+    return `<button type="button" class="store-choice ${chosen?"selected":""}" onclick="selectStore('${s.id}')">
+      <span class="store-mark">⌖</span>
+      <strong>${escapeHTML(s.name||"")}</strong>
+      <span class="store-check">${chosen?"✓":"›"}</span>
+    </button>`;
+  }).join("");
+}
+
+window.selectStore=(id)=>{
+  const store=storeCache.find(s=>s.id===id && s.prefecture===selectedPrefecture);
+  if(!store)return;
+  selectedStoreId=id;
+  document.getElementById("registerStore").value=id;
+  document.getElementById("selectedStoreSummary").textContent=`選択中の店舗：${store.prefecture} ／ ${store.name}`;
+  renderStoreChoices();
+};
+
+window.reloadStoreMaster=async()=>{
+  selectedPrefecture="";
+  selectedStoreId="";
+  document.getElementById("registerPrefecture").value="";
+  document.getElementById("registerStore").value="";
+  document.getElementById("selectedStoreSummary").textContent="選択中の店舗：まだ選択されていません";
+  document.getElementById("storeChoices").innerHTML='<div class="picker-message">先に都道府県を選択してください。</div>';
+  await loadStoreMaster();
+};
+
 window.register=async()=>{
-const email=document.getElementById("registerEmail").value.trim();
-const password=document.getElementById("registerPassword").value;
-
-try{
-const r=await createUserWithEmailAndPassword(auth,email,password);
-const u=r.user;
-
-await setDoc(doc(db,"members",u.uid),{
-uid:u.uid,
-points:0,
-createdAt:serverTimestamp()
-});
-
-alert("会員登録が完了しました！");
-}catch(e){
-alert("登録できませんでした："+e.message);
-}
+  const nickname=document.getElementById("registerNickname").value.trim();
+  const storeId=document.getElementById("registerStore").value;
+  const store=storeCache.find(s=>s.id===storeId);
+  const button=document.getElementById("registerButton");
+  if(!nickname){alert("ニックネームを入力してください。");return;}
+  if(nickname.length>20){alert("ニックネームは20文字以内で入力してください。");return;}
+  if(!store){alert("お気に入り店舗を選択してください。");return;}
+  button.disabled=true; button.textContent="登録しています...";
+  try{
+    const credential=await signInAnonymously(auth);
+    const u=credential.user;
+    const memberNo="WF-"+crypto.randomUUID().replace(/-/g,"").slice(0,10).toUpperCase();
+    await setDoc(doc(db,"members",u.uid),{
+      uid:u.uid, memberNo, nickname, favoriteStoreId:store.id,
+      favoriteStoreName:store.name, favoritePrefecture:store.prefecture,
+      points:0, createdAt:serverTimestamp(), authType:"anonymous"
+    });
+    alert("会員登録が完了しました！");
+  }catch(e){
+    console.error(e);
+    alert("登録できませんでした："+e.message+"\nFirebaseで匿名認証が有効か確認してください。");
+  }finally{
+    button.disabled=false; button.textContent="無料で会員登録";
+  }
 };
 
-window.login=async()=>{
-try{
-await signInWithEmailAndPassword(
-auth,
-document.getElementById("loginEmail").value.trim(),
-document.getElementById("loginPassword").value
-);
-}catch(e){
-alert("ログインできませんでした："+e.message);
-}
+window.logout=async()=>{
+  if(!confirm("この端末からログアウトしますか？引き継ぎ設定前にログアウトすると、会員情報に戻れなくなる場合があります。"))return;
+  await signOut(auth);
+  alert("ログアウトしました。引き継ぎ設定をしていない場合、同じ会員情報に戻れない可能性があります。");
 };
+
 
 onAuthStateChanged(auth,async u=>{
 if(u){
@@ -546,21 +683,22 @@ currentUser=u;
 
 try{
 const ref=doc(db,"members",u.uid);
-const snap=await getDoc(ref);
-
-if(!snap.exists()){
-await setDoc(ref,{
-uid:u.uid,
-points:0,
-createdAt:serverTimestamp()
-});
+let snap=await getDoc(ref);
+// 匿名認証直後は会員データ作成より先に認証状態通知が届く場合があるため、少し待って再確認
+for(let i=0;!snap.exists() && i<15;i++){
+  await new Promise(resolve=>setTimeout(resolve,200));
+  snap=await getDoc(ref);
 }
-
-const n="WF-"+u.uid.substring(0,8).toUpperCase();
-
+if(!snap.exists()){
+  alert("会員情報が見つかりません。新規登録からお進みください。");
+  await signOut(auth); return;
+}
+memberData=snap.data();
+const n=memberData.memberNo||("WF-"+u.uid.substring(0,8).toUpperCase());
 document.getElementById("memberNumber").textContent=n;
 document.getElementById("memberNumber2").textContent=n;
-document.getElementById("memberEmail").textContent=u.email;
+document.getElementById("memberNickname").textContent=memberData.nickname||"会員";
+document.getElementById("memberFavoriteStore").textContent=memberData.favoriteStoreName||"未設定";
 document.getElementById("bottomNav").classList.remove("hidden");
 
 showPage("homeScreen");
@@ -571,9 +709,10 @@ alert("会員情報を読み込めませんでした："+e.message);
 }
 
 }else{
-currentUser=null;
+currentUser=null; memberData=null;
 document.getElementById("bottomNav").classList.add("hidden");
 showPage("loginScreen");
+try{ await loadStoreMaster(); }catch(e){ console.error(e); document.getElementById("authMessage").textContent="店舗一覧を読み込めません。通信状況を確認してください。"; }
 }
 });
 
